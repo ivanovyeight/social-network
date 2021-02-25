@@ -68,7 +68,7 @@
           // Calls himself in a few milliseconds
           window.setTimeout(arguments.callee, 250)
         } else {
-          // Too much attempts to load, send error
+          // Too many attempts to load, send error
           alert('An error occurred while loading jQuery')
         }
       } else {
