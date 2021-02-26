@@ -19,3 +19,9 @@ class Contact(models.Model):
 
     def __str__(self):
         return f'{self.user_from} подписан на {self.user_to}'
+
+
+# Динамическое добавление поля following в модель User
+User.add_to_class('following', models.ManyToManyField('self', through=Contact,
+                                                      related_name='followers',
+                                                      symmetrical=False))

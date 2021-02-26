@@ -1,12 +1,28 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 from . forms import LoginForm, UserRegistrationForm
 from django.contrib.auth.decorators import login_required
+
 
 @login_required
 def dashboard(request):
     return render(request,'account/dashboard.html',{'section': 'dashboard'})
+
+
+@login_required
+def user_list(request):
+    """ Список всех активных пользователей. """
+    users = User.objects.filter(is_active=True)
+    return render(request, '', {'section': 'people', 'users': users})
+
+
+@login_required
+def user_detail(request, username):
+    user = get_object_or_404(User, username=username, is_active=True)
+    return render(request, '', {'section': 'people', 'user': user})
+
 
 def register(request):
     if request.method == 'POST':
@@ -22,6 +38,7 @@ def register(request):
     else:
         form = UserRegistrationForm()
     return render(request,'account/register.html',{'form': form})
+
 
 # def user_login(request):
 #     if request.method == 'POST':
