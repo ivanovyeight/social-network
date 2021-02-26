@@ -15,13 +15,15 @@ def dashboard(request):
 def user_list(request):
     """ Список всех активных пользователей. """
     users = User.objects.filter(is_active=True)
-    return render(request, '', {'section': 'people', 'users': users})
+    return render(request, 'account/user/list.html',
+                  {'section': 'people', 'users': users})
 
 
 @login_required
 def user_detail(request, username):
     user = get_object_or_404(User, username=username, is_active=True)
-    return render(request, '', {'section': 'people', 'user': user})
+    return render(request, 'account/user/detail.html',
+                  {'section': 'people', 'user': user})
 
 
 def register(request):
