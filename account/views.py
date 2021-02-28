@@ -6,14 +6,25 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
 from account.models import Contact
-from . forms import LoginForm, UserRegistrationForm
+from .forms import LoginForm, UserRegistrationForm
 from actions.utils import create_action
+from actions.models import Action
 from common.decorators import ajax_required
 
 
 @login_required
 def dashboard(request):
-    return render(request,'account/dashboard.html',{'section': 'dashboard'})
+    actions = Action.objects.exclude(user=request.user)
+    following_ids = request.user.following.values_list('id', flat=True)
+
+    if following_ids:
+        actions = actions.filter(user_id__in=following_ids)
+        # второй аргумент должен быть user__profile
+    actions = actions.select_related('user', 'user').prefetch_related(
+        'target')[:10]
+
+    return render(request, 'account/dashboard.html',
+                  {'section': 'dashboard', 'actions': actions})
 
 
 @login_required
@@ -67,11 +78,11 @@ def register(request):
             # Сохраняем пользователя в базе данных.
             new_user.save()
             create_action(new_user, 'has created an account')
-            return render(request, 'account/register_done.html', {'new_user': new_user})
+            return render(request, 'account/register_done.html',
+                          {'new_user': new_user})
     else:
         form = UserRegistrationForm()
-    return render(request,'account/register.html',{'form': form})
-
+    return render(request, 'account/register.html', {'form': form})
 
 # def user_login(request):
 #     if request.method == 'POST':
