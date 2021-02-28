@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 
 from account.models import Contact
 from . forms import LoginForm, UserRegistrationForm
-
+from actions.utils import create_action
 from common.decorators import ajax_required
 
 
@@ -46,6 +46,7 @@ def user_follow(request):
             if action == 'follow':
                 Contact.objects.get_or_create(user_from=request.user,
                                               user_to=user)
+                create_action(request.user, 'is following', user)
             else:
                 Contact.objects.filter(user_from=request.user,
                                        user_to=user).delete()
@@ -65,6 +66,7 @@ def register(request):
             new_user.set_password(form.cleaned_data['password'])
             # Сохраняем пользователя в базе данных.
             new_user.save()
+            create_action(new_user, 'has created an account')
             return render(request, 'account/register_done.html', {'new_user': new_user})
     else:
         form = UserRegistrationForm()
