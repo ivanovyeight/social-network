@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Edit your account{% endblock %}
+{% block content %}
+    <!-- <h1>Edit your account</h1>
+    <p>You can edit your account using the following form:</p>
+    <form action="." method="post" enctype="multipart/form-data">
+        {{ user_form.as_p }}
+        {{ profile_form.as_p }}
+        {% csrf_token %}
+        <p><input type="submit" value="Save changes"></p>
+    </form> -->
+
+    <div class="container">
+        <div class="card my-5 text-center">
+            <form action="{% url 'edit' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+                <div class="card-header">
+                    You can edit your account using the following form:
+                </div>
+                <div class="card-body">
+                    {% for field in user_form %}
+                        <div class="form-group">
+                            {% if field.errors %}
+                                <input type="text" class="form-control is-invalid" name="{{ field.name }}" id="id_{{ field.name }}" placeholder="{{ field.name|title }} {{ field.help_text }}">
+                                <small class="text-danger">
+                                    {{ field.errors }}
+                                </small>
+                            {% else %}
+                                <input type="text" class="form-control" value="{{ field.value }}" name="{{ field.name }}" id="id_{{ field.name }}" placeholder="{{ field.name|title }} {{ field.help_text }}">
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    {% for field in profile_form %}
+                        <div class="form-group">
+                            {% if field.errors %}
+                                <input type="text" class="form-control is-invalid" name="{{ field.name }}" id="id_{{ field.name }}" placeholder="{{ field.name|title }} {{ field.help_text }}">
+                                <small class="text-danger">
+                                    {{ field.errors }}
+                                </small>
+                            {% else %}
+                                {% if field.name == "photo" %}
+                                    <input type="file" class="form-control-file" name="{{ field.name }}" id="id_{{ field.name }}" placeholder="{{ field.name|title }} {{ field.help_text }}">
+                                {% else %}
+                                    <input type="text" class="form-control" name="{{ field.name }}" id="id_{{ field.name }}" placeholder="{{ field.name|title }} {{ field.help_text }}">
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <input type="hidden" name="next" value="{{ next }}" />
+                </div>
+    
+                <div class="card-footer text-muted container">
+                    <div class="row">
+                        <button type="submit" class="col btn btn-primary">Save Changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
