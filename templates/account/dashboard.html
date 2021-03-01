@@ -1,24 +1,34 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
-    <h1>Dashboard</h1>
-    {% with total_images_created=request.user.images_created.count %}
-        <p>Welcome to your dashboard.
-        {{ total_images_created }} image{{ total_images_created|pluralize }}</p>
-    {% endwith %}
-    <p>Drag the following button to your bookmarks toolbar to bookmark images from other websites
-        <a href="javascript: {% include 'bookmarklet_launcher.js' %}" class="button">
-            Bookmark it
-        </a>
-    </p>
-{#    <p>You can also <a href="{% url 'edit' %}">Edit your profile</a> or#}
-{#    <a href="{% url 'password_change' %}">Change your password</a>#}
-{#    </p>#}
+<div class="container my-5">
+    <div class="container">
+        <h1 class="text-center row justify-content-between">
+            {{ request.user.username }}
+            <span>
+                <a class="btn btn-secondary" href="{% url 'edit' %}" role="button">Edit Profile</a>
+                <a class="btn btn-secondary" href="{% url 'password_change' %}" role="button">Change Password</a>
+            </span>
+        </h1>
+    </div>
 
-    <h2>What's happening</h2>
+    <hr class="my-4">
+    <h2>What's happening:</h2>
     <div class="action-list">
         {% for action in actions %}
             {% include 'actions/action/detail.html' %}
         {% endfor %}
     </div>
+    <hr class="my-4">
+    <p>Drag the following button to your bookmarks toolbar to bookmark images from other websites
+        <a href="javascript: {% include 'bookmarklet_launcher.js' %}" class="btn btn-success">
+            Bookmark it
+        </a>
+    </p>
+    <hr class="my-4">
+    {% with total_images_created=request.user.images_created.count %}
+        {{ total_images_created }} image{{ total_images_created|pluralize }}</p>
+    {% endwith %}
+</div>
+
 {% endblock %}
