@@ -9,16 +9,16 @@ class Contact(models.Model):
     """
 
     user_from = models.ForeignKey(User, related_name='rel_from_set',
-                                  on_delete=models.CASCADE)
+                                        on_delete=models.CASCADE)
     user_to = models.ForeignKey(User, related_name='rel_to_set',
-                                on_delete=models.CASCADE)
+                                      on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
         ordering = ('-created', )
 
     def __str__(self):
-        return f'{self.user_from} подписан на {self.user_to}'
+        return f'{self.user_from} subscribed to {self.user_to}'
 
 
 # Динамическое добавление поля following в модель User
@@ -33,4 +33,4 @@ class Profile(models.Model):
     photo = models.ImageField(upload_to='users/%Y/%m/%d/', blank=True)
 
     def __str__(self):
-        return 'Profile for user {}'.format(self.user.username)
+        return f'Profile for user {self.user.username}'

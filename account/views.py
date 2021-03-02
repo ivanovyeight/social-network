@@ -1,16 +1,17 @@
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, get_object_or_404
+from actions.models import Action
+from actions.utils import create_action
+from common.decorators import ajax_required
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_POST
 
 from account.models import Contact
-from . forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
-from actions.utils import create_action
-from actions.models import Action
-from common.decorators import ajax_required
-from . models import Profile
+
+from .forms import ProfileEditForm, UserEditForm, UserRegistrationForm
+from .models import Profile
 
 
 @login_required
@@ -92,8 +93,7 @@ def edit(request):
     if request.method == 'POST':
         user_form = UserEditForm(instance=request.user,data=request.POST)
         profile_form = ProfileEditForm(instance=request.user.profile,
-        data=request.POST,
-        files=request.FILES)
+                                    data=request.POST, files=request.FILES)
         
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
@@ -101,23 +101,5 @@ def edit(request):
     else:
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
-    return render(request,'account/edit.html', {'user_form': user_form,'profile_form': profile_form})
-
-
-# def user_login(request):
-#     if request.method == 'POST':
-#         form = LoginForm(request.POST)
-#         if form.is_valid():
-#             cd = form.cleaned_data
-#             user = authenticate(request, username=cd['username'], password=cd['password'])
-#         if user is not None:
-#             if user.is_active:
-#                 login(request, user)
-#                 return HttpResponse('Authenticated successfully')
-#             else:
-#                 return HttpResponse('Disabled account')
-#         else:
-#             return HttpResponse('Invalid login')
-#     else:
-#         form = LoginForm()
-#     return render(request, 'account/login.html', {'form': form})
+    return render(request,'account/edit.html', {'user_form': user_form,
+                                                'profile_form': profile_form})

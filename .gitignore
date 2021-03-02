@@ -14,3 +14,7 @@ venv/
 
 # Media
 media/
+
+# Tests
+.coverage
+htmlcov
