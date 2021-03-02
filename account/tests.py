@@ -6,10 +6,9 @@ from account.models import Profile
 from account.forms import UserRegistrationForm, ProfileEditForm
 
 
-class FormsTest(TestCase):
+class AccountTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='whoami', password='pass', 
-                    first_name="Firstname")
+        self.user = User.objects.create_user(username='whoami', password='pass')
         Profile.objects.create(user=self.user)
         self.client.login(username='whoami', password='pass')
 
@@ -20,10 +19,10 @@ class FormsTest(TestCase):
         self.assertFalse(form.is_valid())
 
     def test_profile_edit_form_is_valid(self):
-        data = {'date_of_birth': '01/01/1900'}
+        data = {'date_of_birth': 'qqq'}
         self.client.post("edit", data)
         profile_form = ProfileEditForm(data=data)
-        self.assertTrue(profile_form.is_valid())
+        self.assertFalse(profile_form.is_valid())
 
     # URLS
     def test_users_list_url_is_resolved(self):
