@@ -18,7 +18,7 @@ class Contact(models.Model):
         ordering = ('-created', )
 
     def __str__(self):
-        return f'{self.user_from} подписан на {self.user_to}'
+        return f'{self.user_from} subscribed to {self.user_to}'
 
 
 # Динамическое добавление поля following в модель User
@@ -33,4 +33,4 @@ class Profile(models.Model):
     photo = models.ImageField(upload_to='users/%Y/%m/%d/', blank=True)
 
     def __str__(self):
-        return 'Profile for user {}'.format(self.user.username)
+        return f'Profile for user {self.user.username}'
