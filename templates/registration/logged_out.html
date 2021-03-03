@@ -1,8 +1,18 @@
+
 {% extends "base.html" %}
-{% block title %}Logged out{% endblock %}
+{% block title %}Logged Out{% endblock %}
 {% block content %}
-    <h1>Logged out</h1>
-    <p>You have been successfully logged out.
-    You can <a href="{% url 'login' %}">log-in again</a>.
-    </p>
+
+<div class="container">
+    <div class="card my-5 text-center">
+            <div class="card-header container">
+                You have been successfully logged out
+            </div>
+
+
+            <div class="card-body">
+                You can <a href="{% url 'login' %}">log in again</a>.
+            </div>
+    </div>
+</div>
 {% endblock %}

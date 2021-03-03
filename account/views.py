@@ -25,6 +25,9 @@ def dashboard(request):
     actions = actions.select_related('user', 'user').prefetch_related(
         'target')[:10]
 
+    # Create profile for users created not with register form
+    Profile.objects.get_or_create(user=request.user)
+
     return render(request, 'account/dashboard.html',
                   {'section': 'dashboard', 'actions': actions})
 

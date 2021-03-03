@@ -7,9 +7,20 @@
         <form action="{% url 'login' %}" method="POST">
         {% csrf_token %}
 
-            <div class="card-header">
-                Please, use the following form to login. If you don't have an account <a href="{% url 'register' %}">register here</a>
+            <div class="card-header container">
+                <div class="row justify-content-between">
+                    <span>
+                        Please, use the following form to login. If you don't have an account <a class="btn btn-sm btn-success" href="{% url 'register' %}" role="button">Register Here</a>
+                    </span>
+                    <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-sm btn-secondary">
+                        Login with Google
+                    </a>
+                </div>
             </div>
+
+            <li class="google">
+ 
+               </li>
 
             <div class="card-body">
                 {% for field in form %}
@@ -30,7 +41,7 @@
 
             <div class="card-footer text-muted container">
                 <div class="row">
-                    <button type="submit" class="col-9 btn btn-primary">Login</button>
+                    <button type="submit" class="col-9 btn btn-dark">Login</button>
                     &nbsp;
                     <a href="{% url 'password_reset' %}" class="col btn btn-secondary">
                             Forgotten your password?
