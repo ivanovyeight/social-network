@@ -1,7 +1,9 @@
-from django import forms
-from .models import *
 from urllib import request
+
+from django import forms
 from django.core.files.base import ContentFile
+
+from .models import *
 
 
 class ImageCreationForm(forms.ModelForm):
