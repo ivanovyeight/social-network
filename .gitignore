@@ -18,4 +18,5 @@ media/
 # Tests
 .coverage
 htmlcov
+
 .idea/
