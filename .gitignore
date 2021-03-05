@@ -2,7 +2,7 @@
 .idea
 
 # Django
-migrations/
+# migrations/
 db.sqlite3
 
 # Python
@@ -18,3 +18,4 @@ media/
 # Tests
 .coverage
 htmlcov
+.idea/
