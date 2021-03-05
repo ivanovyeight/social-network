@@ -1,7 +1,22 @@
 {% extends "base.html" %}
-{% block title %}Welcome{% endblock %}
+{% block title %}Create an account{% endblock %}
 {% block content %}
- <h1>Welcome {{ new_user.first_name }}!</h1>
- <p>Your account has been successfully created.
- Now you can <a href="{% url 'login' %}">log in</a>.</p>
+
+<div class="container">
+    <div class="card my-5 text-center">
+        <form action="{% url 'register' %}" method="POST">
+        {% csrf_token %}
+            <div class="card-header">
+                Welcome, {{ new_user.first_name }}!
+            </div>
+
+            <div class="card-body">
+                Your account has been successfully created.
+                Now you can <a href="{% url 'login' %}">log in</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
 {% endblock %}
