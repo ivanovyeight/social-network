@@ -5,7 +5,6 @@ services:
     restart: always
     container_name: src
     build: .
-    command: gunicorn config.wsgi --bind 0.0.0.0:8000 --workers 3
     volumes:
       - .:/src
     ports:
