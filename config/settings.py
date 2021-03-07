@@ -45,6 +45,7 @@ INSTALLED_APPS += [
     'actions.apps.ActionsConfig',
     'sorl.thumbnail',
     'social_django',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
