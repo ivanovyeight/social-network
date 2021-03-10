@@ -1,56 +1,39 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+    <v-app-bar app color="dark-2" dark>
+      <template v-if="!accessTokenIsSet && !isLoggedIn">
+        <v-btn text class="mr-2" to="/register">Register</v-btn>
+        <v-btn text class="mr-2" to="/login">Login</v-btn>
+      </template>
+      <template v-else>
+        <v-btn text class="mr-2" to="/about">About</v-btn>
+        <v-btn text class="mr-2" v-on:click="handleLogout">Logout</v-btn>
+      </template>
     </v-app-bar>
 
     <v-main>
-      <HelloWorld />
+      <router-view></router-view>
+      <hr>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld";
-
+import { mapActions, mapState } from 'vuex';
 export default {
-  name: "App",
-
-  components: {
-    HelloWorld
+  name: 'App',
+  computed: {
+    ...mapState(['isLoggedIn', 'accessTokenIsSet']),
   },
-
-  data: () => ({
-    //
-  })
+  methods: {
+    handleLogout(event) {
+      event.preventDefault();
+      this.logout();
+      if (this.$route.path != '/') {
+        this.$router.push("/");
+      }
+    },
+    ...mapActions(['logout']),
+  },
 };
 </script>
