@@ -7,12 +7,24 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_POST
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from account.models import Contact
 
 from .forms import ProfileEditForm, UserEditForm, UserRegistrationForm
 from .models import Profile
+from .serializers import UserSerializer
 
+
+@api_view(["POST"])
+def register(request):
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @login_required
 def dashboard(request):
@@ -72,23 +84,23 @@ def user_follow(request):
     return JsonResponse({'status': 'ok'})
 
 
-def register(request):
-    if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            # Создаем нового пользователя, но пока не сохраняем в базу данных.
-            new_user = form.save(commit=False)
-            # Задаем пользователю зашифрованный пароль.
-            new_user.set_password(form.cleaned_data['password'])
-            # Сохраняем пользователя в базе данных.
-            new_user.save()
-            Profile.objects.create(user=new_user)
-            create_action(new_user, 'has created an account')
-            return render(request, 'account/register_done.html',
-                          {'new_user': new_user})
-    else:
-        form = UserRegistrationForm()
-    return render(request, 'account/register.html', {'form': form})
+# def register(request):
+#     if request.method == 'POST':
+#         form = UserRegistrationForm(request.POST)
+#         if form.is_valid():
+#             # Создаем нового пользователя, но пока не сохраняем в базу данных.
+#             new_user = form.save(commit=False)
+#             # Задаем пользователю зашифрованный пароль.
+#             new_user.set_password(form.cleaned_data['password'])
+#             # Сохраняем пользователя в базе данных.
+#             new_user.save()
+#             Profile.objects.create(user=new_user)
+#             create_action(new_user, 'has created an account')
+#             return render(request, 'account/register_done.html',
+#                           {'new_user': new_user})
+#     else:
+#         form = UserRegistrationForm()
+#     return render(request, 'account/register.html', {'form': form})
 
 
 @login_required
