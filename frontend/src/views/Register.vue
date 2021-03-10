@@ -3,7 +3,6 @@
     <v-form>
       <v-container>
         <v-text-field v-model="email" label="Email" required></v-text-field>
-        <v-text-field v-model="name" label="Name" required></v-text-field>
         <v-text-field
           v-model="username"
           label="Username"
@@ -36,7 +35,6 @@ export default {
   data() {
     return {
       email: "",
-      name: "",
       username: "",
       password: "",
     };
@@ -44,7 +42,6 @@ export default {
   methods: {
     registerUser() {
       axios.post("http://localhost:8000/account/register/", {
-          name: this.name,
           email: this.email,
           username: this.username,
           password: this.password,
