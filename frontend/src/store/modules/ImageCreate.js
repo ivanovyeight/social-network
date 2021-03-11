@@ -1,5 +1,9 @@
 import axios from 'axios'
 import Vue from 'vue'
+import { ACCESS_TOKEN } from '../../services/auth';
+
+
+
 const state = {
     data:{
         title: "",
@@ -19,7 +23,10 @@ const actions = {
 
 
     async sendImageObject(){
-        await axios.post("/images/api/create/", state)
+        await axios.post("/images/api/create/", state, {headers: {
+            Authorization: `Bearer ${window.localStorage.getItem(ACCESS_TOKEN)}`,
+            'Content-Type': 'application/json',
+          }})
     }
 }
 
