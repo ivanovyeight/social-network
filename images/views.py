@@ -11,6 +11,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from actions.utils import create_action
 from common.decorators import ajax_required
+from .serializers import ImageSerializer
 
 from .forms import ImageCreationForm
 from .models import Image
@@ -21,8 +22,12 @@ r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT,
 @login_required
 @api_view(['POST'])
 def image_create(request):
-    # mapping image to the user
-    print(request.user)
+    serializer = ImageSerializer(data=request.data)
+    
+    if serializer.is_valid():
+        serializer.validated_data['user'] = request.user
+        serializer.save()
+        
     return Response('fsd')
     # new_item.user = request.user
     # new_item.save()

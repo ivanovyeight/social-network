@@ -23,7 +23,7 @@ const actions = {
 
 
     async sendImageObject(){
-        await axios.post("/images/api/create/", state, {headers: {
+        await axios.post("/images/api/create/", state.data, {headers: {
             Authorization: `Bearer ${window.localStorage.getItem(ACCESS_TOKEN)}`,
             'Content-Type': 'application/json',
           }})
