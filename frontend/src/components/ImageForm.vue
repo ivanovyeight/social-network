@@ -22,11 +22,10 @@
       </template>
       </v-img>
 
-      <ValidationProvider v-slot="{ errors }" name="Title" rules="required|max:30">
+      <ValidationProvider v-slot="{ }" name="Title" rules="required|max:30">
         <v-text-field
           v-model="title"
           :counter="30"
-          :error-messages="errors"
           label="Title"
           required
         ></v-text-field>
@@ -34,7 +33,6 @@
         <v-text-field
           v-model="description"
           :counter="150"
-          :error-messages="errors"
           label="Description"
 
         
@@ -77,17 +75,18 @@
     methods: {
       imageValidation(){
         let img = document.createElement('img')
-        img.src = this.imageData.url
-        img.onerror = function(){
-          return false
+        img.src = this.url
+        if (img.width == 0){
+          return false;
         }
       },
       submit () {
         this.$refs.observer.validate()
-        if (!this.imageValidation()){
+        if (this.imageValidation()===false){
           console.log("false")
           return false
-        }else{
+        }
+        else{
           let obj = {
             title: this.title,
             url: this.url,
