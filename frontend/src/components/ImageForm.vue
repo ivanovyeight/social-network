@@ -46,7 +46,7 @@
 
 
 <script>
-  import { required } from 'vee-validate/dist/rules'
+  import { required, max } from 'vee-validate/dist/rules'
   import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
   import {mapGetters, mapActions} from "vuex"
 
@@ -57,7 +57,10 @@
     message: '{_field_} can not be empty',
   })
 
-
+  extend('max', {
+    ...max,
+    message: '{_field_} may not be greater than {length} characters',
+  })
   export default {
     name: "ImageForm",
     components: {
@@ -68,7 +71,7 @@
       title: '',
       description: "",
       url: '',
-
+    
     }),
 
     methods: {
@@ -80,17 +83,21 @@
         }
       },
       submit () {
-        // if (!this.imageValidation() || this.$refs.observer.validate().isFulfilled()){
-        //   this.$refs.observer.validate()
-        //   return false
-        // }
-        let obj = {
-          title: this.title,
-          url: this.url,
-          description: this.description,
+        this.$refs.observer.validate()
+        if (!this.imageValidation()){
+          console.log("false")
+          return false
+        }else{
+          let obj = {
+            title: this.title,
+            url: this.url,
+            description: this.description,
         }
         this.saveImageToState(obj)
         this.sendImageObject()
+
+        }
+
       },
       ...mapActions(["sendImageObject", "saveImageToState"])
     },
