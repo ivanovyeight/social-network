@@ -91,10 +91,6 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'postgres',
         'HOST': 'localhost',
-<<<<<<< Updated upstream
-        # 'HOST': 'db',
-=======
->>>>>>> Stashed changes
         'PORT': 5432,
     }
 }

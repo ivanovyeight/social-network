@@ -7,7 +7,8 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
-
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from actions.utils import create_action
 from common.decorators import ajax_required
 
@@ -17,25 +18,17 @@ from .models import Image
 r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT,
                       db=settings.REDIS_DB)
 
-
 @login_required
+@api_view(['POST'])
 def image_create(request):
-    if request.method == "POST":
-        form = ImageCreationForm(data=request.POST)
-        if form.is_valid():
-            cleaned_data = form.cleaned_data
-            new_item = form.save(commit=False)
-            # mapping image to the user
-            new_item.user = request.user
-            new_item.save()
-            create_action(request.user, 'bookmarked image', new_item)
-            messages.success(request, "Image added successfully!")
-            return redirect(new_item.get_absolute_url())
-    else:
-        form = ImageCreationForm(data=request.GET)
-    return render(request,
-                  'images/image/create.html',
-                  {'section': 'images', 'form': form})
+    # mapping image to the user
+    print(request.user)
+    return Response('fsd')
+    # new_item.user = request.user
+    # new_item.save()
+    # create_action(request.user, 'bookmarked image', new_item)
+    # messages.success(request, "Image added successfully!")
+    # return redirect(new_item.get_absolute_url())
 
 
 def image_detail(request, id, slug):

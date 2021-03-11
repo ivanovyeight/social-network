@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { loginUser, logoutUser } from '../services/auth';
+import ImageCreate from './modules/ImageCreate'
 
 Vue.use(Vuex);
 
@@ -37,5 +38,5 @@ export default new Vuex.Store({
       commit('logout');
     },
   },
-  modules: {},
+  modules: {ImageCreate},
 });
