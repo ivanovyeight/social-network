@@ -17,26 +17,24 @@
       </v-card-actions>
 
       <form v-if="formIsVisible" class="p-2">
-
         <v-text-field
           type="text"
           placeholder="First Name"
-          :value=whoami.first_name
+          v-model="whoami.first_name"
         ></v-text-field>
         <v-text-field
-          :value=whoami.last_name
+          :value="whoami.last_name"
           type="text"
           placeholder="Last Name"
         ></v-text-field>
         <v-text-field
-          :value=payload.email
-          @input="updateUser"
+          v-model="whoami.email"
           type="text"
           placeholder="Email"
         ></v-text-field>
         <v-text-field
           type="text"
-          :value=whoami.date_of_birth
+          v-model="whoami.date_of_birth"
           placeholder="Date Of Birth"
         ></v-text-field>
         <v-btn
@@ -63,10 +61,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
-      formIsVisible: false,
-      payload: {
-        
-      }
+      formIsVisible: false
     };
   },
   mounted() {
@@ -74,13 +69,11 @@ export default {
   },
   computed: {
     ...mapState({
-        whoami: state => state.authentication.whoami,
+      whoami: state => state.authentication.whoami
     })
   },
   methods: {
-    ...mapActions([
-      'whoamiUpdate'
-    ]),
+    ...mapActions(["whoamiUpdate"]),
     updateUser(event) {
       // let payload = {
       //   'refresh_token': this.whoami.refresh_token,
@@ -93,7 +86,7 @@ export default {
       //   'date_of_birth': this.whoami.date_of_birth,
       //   'photo': this.whoami.photo,
       // }
-      console.log(event.target.value)
+      console.log(event.target.value);
       // this.$store.dispatch("update_current_user_action", this.payload);
     }
   }

@@ -4,6 +4,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
+import CreateImage from "../views/CreateImage.vue";
 import Profile from "../views/Profile.vue";
 
 Vue.use(VueRouter);
@@ -15,6 +16,8 @@ const routes = [
   { path: "/login", name: "Login", component: Login },
   { path: "/register", name: "Register", component: Register },
   { path: "/profile", name: "Profile", component: Profile },
+
+  { path: "/images/create", name: "Create Image", component: CreateImage },
 
   {
     path: "/about",

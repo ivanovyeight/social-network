@@ -26,7 +26,7 @@ export default {
   name: "App",
   computed: {
     ...mapState({
-        whoami: state => state.authentication.whoami,
+      whoami: state => state.authentication.whoami
     })
   },
   methods: {

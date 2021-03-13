@@ -8,4 +8,7 @@ urlpatterns = [
     path('detail/<int:id>/<slug:slug>/', views.image_detail, name='detail'),
     path('like/', views.image_like, name='image_like'),
     path('', views.image_list, name='list'),
+
+    #api
+    path('api/create/', views.image_create, name='image_create')
 ]
