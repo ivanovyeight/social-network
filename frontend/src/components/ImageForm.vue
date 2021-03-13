@@ -80,9 +80,9 @@
           return false;
         }
       },
-      submit () {
-        this.$refs.observer.validate()
-        if (this.imageValidation()===false){
+      async submit () {
+        const isValid = await this.$refs.observer.validate();
+        if (this.imageValidation()===false || !isValid){
           console.log("false")
           return false
         }

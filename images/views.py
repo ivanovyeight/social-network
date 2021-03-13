@@ -18,21 +18,18 @@ from .models import Image
 
 r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT,
                       db=settings.REDIS_DB)
-
-@login_required
+#login required
 @api_view(['POST'])
 def image_create(request):
-    serializer = ImageSerializer(data=request.data)
-    
-    if serializer.is_valid():
-        serializer.validated_data['user'] = request.user
-        serializer.save()
-        
-    return Response('fsd')
-    # new_item.user = request.user
-    # new_item.save()
-    # create_action(request.user, 'bookmarked image', new_item)
-    # messages.success(request, "Image added successfully!")
+    try:
+        serializer = ImageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.validated_data['user'] = request.user
+            serializer.save()
+        return Response('success')
+    except Exception:
+        return Response('failure')
+
     # return redirect(new_item.get_absolute_url())
 
 
