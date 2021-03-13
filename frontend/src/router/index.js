@@ -1,17 +1,14 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
 
+import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Profile from "../views/Profile.vue";
 
-
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '../services/auth';
-
 Vue.use(VueRouter);
 
-const PUBLIC_PATHS = ['/', '/login', '/register'];
+// const PUBLIC_PATHS = ["/", "/login", "/register"];
 
 const routes = [
   { path: "/", name: "Home", component: Home },
@@ -36,16 +33,17 @@ const router = new VueRouter({
   routes
 });
 
-const unAuthenticatedAndPrivatePage = (path) => (!PUBLIC_PATHS.includes(path)
-    && !(ACCESS_TOKEN in window.localStorage)
-    && !(REFRESH_TOKEN in window.localStorage));
+// const unAuthenticatedAndPrivatePage = path =>
+//   !PUBLIC_PATHS.includes(path) &&
+//   !(ACCESS_TOKEN in window.localStorage) &&
+//   !(REFRESH_TOKEN in window.localStorage);
 
-router.beforeEach((to, from, next) => {
-  if (unAuthenticatedAndPrivatePage(to.path)) {
-    next(`/login?next=${to.path}`);
-  } else {
-    next();
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   if (unAuthenticatedAndPrivatePage(to.path)) {
+//     next(`/login?next=${to.path}`);
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;

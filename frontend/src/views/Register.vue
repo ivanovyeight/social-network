@@ -14,9 +14,9 @@
           label="Password"
           required
         ></v-text-field>
-
       </v-container>
-      <v-btn dark
+      <v-btn
+        dark
         color="grey darken-2"
         block
         x-large
@@ -30,21 +30,22 @@
 </template>
 
 <script>
-import axios from "axios"
+import axios from "axios";
 export default {
   data() {
     return {
       email: "",
       username: "",
-      password: "",
+      password: ""
     };
   },
   methods: {
     registerUser() {
-      axios.post("http://localhost:8000/account/register/", {
+      axios
+        .post("http://localhost:8000/account/register/", {
           email: this.email,
           username: this.username,
-          password: this.password,
+          password: this.password
         })
         .then(() => {
           this.$router.push({ name: "Login" });
