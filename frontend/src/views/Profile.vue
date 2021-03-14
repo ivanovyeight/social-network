@@ -1,6 +1,6 @@
 <template>
-    <div class="container">
-      <v-row>
+  <div class="container">
+    <v-row>
       <v-card float-left class="mx-auto my-5 col-md-2">
         <v-img
           height="350"
@@ -45,23 +45,18 @@
           <v-card-title>
             USERNAME_POSTED_PLACHOLDER:
           </v-card-title>
-      
+
           <v-img
             src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
             height="200px"
           ></v-img>
-      
 
           <v-card-subtitle>
             TIMESTAMP_PLACEHOLDER
           </v-card-subtitle>
-      
+
           <v-card-actions>
-            <v-btn
-              color="orange lighten-2"
-              text
-              block
-            >
+            <v-btn color="orange lighten-2" text block>
               DETAILS
             </v-btn>
           </v-card-actions>
@@ -70,7 +65,7 @@
           </div> -->
         </v-card>
       </v-container>
-  </v-row>
+    </v-row>
   </div>
 </template>
 
