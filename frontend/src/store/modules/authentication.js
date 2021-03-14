@@ -8,7 +8,8 @@ const actions = {
   login({ commit }, { username, password }) {
     let credentials = { username, password };
 
-    axios.create({
+    axios
+      .create({
         baseURL: "http://localhost:8000",
         timeout: 5000,
         headers: {
@@ -21,21 +22,24 @@ const actions = {
         commit("LOGIN", response.data);
       });
   },
-  whoamiUpdate({ commit }, {key, value}) {
+  whoamiUpdate({ commit }, { key, value }) {
     const sendPatchRequest = async () => {
       try {
-        const response = await axios.post('http://localhost:8000/account/update/', { 
-          id: 1,  
-          key: key,
-          value: value
-        });
+        const response = await axios.post(
+          "http://localhost:8000/account/update/",
+          {
+            id: 1,
+            key: key,
+            value: value
+          }
+        );
         console.log(response.data);
       } catch (error) {
         console.error(error);
       }
-    }
-    sendPatchRequest()
-    commit('UPDATE_WHOAMI', {key, value})
+    };
+    sendPatchRequest();
+    commit("WHOAMI_UPDATE", { key, value });
   }
 };
 
@@ -46,7 +50,7 @@ const mutations = {
   LOGOUT(state) {
     state.whoami = "";
   },
-  UPDATE_WHOAMI(state, {key, value}) {
+  WHOAMI_UPDATE(state, { key, value }) {
     state.whoami[key] = value;
   }
 };

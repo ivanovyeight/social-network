@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import store from "../store/index"
+import store from "../store/index";
 
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
@@ -37,7 +37,7 @@ const PUBLIC_URLS = ["/", "/login", "/register"];
 
 function accessDenied(path) {
   !store.state.authentication.whoami.access_token &&
-  !PUBLIC_URLS.includes(path)
+    !PUBLIC_URLS.includes(path);
 }
 
 router.beforeEach((to, from, next) => {
