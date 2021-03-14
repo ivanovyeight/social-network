@@ -3,8 +3,8 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-    path('get-token-for-user/', views.get_token_for_user),
-    path('update-user/', views.update_user),
+    path('get-token/', views.get_token),
+    path('update/', views.update),
 
     
     path('login/', auth_views.LoginView.as_view(), name='login'),

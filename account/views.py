@@ -1,15 +1,16 @@
 from actions.models import Action
 from actions.utils import create_action
 from common.decorators import ajax_required
-# from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_POST
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from account.models import Contact
 
@@ -17,14 +18,13 @@ from .forms import ProfileEditForm, UserEditForm, UserRegistrationForm
 from .models import Profile
 from .serializers import UserSerializer
 
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate
 
 @api_view(["POST"])
-def get_token_for_user(request):
+def get_token(request):
     username = request.data['username']
     password = request.data['password']
     check_if_user_exists = User.objects.filter(username=username).exists()
+    
     if check_if_user_exists:
         user = authenticate(request, username=username, password=password)
         if user is not None:
@@ -61,16 +61,26 @@ def timeline(request):
     actions = actions.select_related('user', 'user__profile').prefetch_related(
         'target')[:10]
 
-    # # Create profile for users created not with register form
-    Profile.objects.get_or_create(user=user)
     return Response({'actions': actions})
 
 @api_view(["POST"])
-def update_user(request):
-    
-    # user = User.objects.get(id=request.data['user'])
+def update(request):
+    if request.data['key'] == 'date_of_birth':
+        Profile.objects.update_or_create(
+            user = request.data['id'],
+            defaults = {
+                request.data['key']: request.data['value']
+            },
+        )
+    else:
+        User.objects.update_or_create(
+            id = request.data['id'],
+            defaults = {
+                request.data['key']: request.data['value']
+            },
+        )
     return Response({
-        'wer': 343534
+        'data': 'success'
     })
     # user_form = UserEditForm(instance=request.user,data=request.POST)
     # profile_form = ProfileEditForm(instance=request.user.profile,
