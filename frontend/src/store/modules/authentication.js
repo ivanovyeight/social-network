@@ -22,7 +22,7 @@ const actions = {
         commit("LOGIN", response.data);
       });
   },
-  whoamiUpdate({ commit,state }, { key, value }) {
+  whoamiUpdate({ commit, state }, { key, value }) {
     const sendPatchRequest = async () => {
       try {
         const response = await axios.post(
