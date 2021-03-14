@@ -43,13 +43,8 @@
       <v-container fluid fill-height class="mx-auto my-2 col-md-9">
         <v-card float-right class="col-md-12">
           <v-card-title>
-            USERNAME_POSTED_PLACHOLDER:
+            USERNAME_POSTED_PLACEHOLDER:
           </v-card-title>
-
-          <v-img
-            src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-            height="200px"
-          ></v-img>
 
           <v-card-subtitle>
             TIMESTAMP_PLACEHOLDER
