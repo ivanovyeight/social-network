@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import store from "../store/index"
 
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
@@ -9,16 +10,12 @@ import Profile from "../views/Profile.vue";
 
 Vue.use(VueRouter);
 
-// const PUBLIC_PATHS = ["/", "/login", "/register"];
-
 const routes = [
   { path: "/", name: "Home", component: Home },
   { path: "/login", name: "Login", component: Login },
   { path: "/register", name: "Register", component: Register },
   { path: "/profile", name: "Profile", component: Profile },
-
   { path: "/images/create", name: "Create Image", component: CreateImage },
-
   {
     path: "/about",
     name: "About",
@@ -36,17 +33,19 @@ const router = new VueRouter({
   routes
 });
 
-// const unAuthenticatedAndPrivatePage = path =>
-//   !PUBLIC_PATHS.includes(path) &&
-//   !(ACCESS_TOKEN in window.localStorage) &&
-//   !(REFRESH_TOKEN in window.localStorage);
+const PUBLIC_URLS = ["/", "/login", "/register"];
 
-// router.beforeEach((to, from, next) => {
-//   if (unAuthenticatedAndPrivatePage(to.path)) {
-//     next(`/login?next=${to.path}`);
-//   } else {
-//     next();
-//   }
-// });
+function accessDenied(path) {
+  !store.state.authentication.whoami.access_token &&
+  !PUBLIC_URLS.includes(path)
+}
+
+router.beforeEach((to, from, next) => {
+  if (accessDenied(to.path)) {
+    next(`/login?next=${to.path}`);
+  } else {
+    next();
+  }
+});
 
 export default router;

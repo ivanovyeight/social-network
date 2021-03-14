@@ -7,45 +7,34 @@
       ></v-img>
       <v-card-title class="m-4">
         {{ whoami.username }}
+        <v-spacer></v-spacer>
+        <v-icon @click="formIsVisible = !formIsVisible">mdi-content-copy</v-icon>
       </v-card-title>
 
-      <v-divider class="mx-4"></v-divider>
-      <v-card-actions>
-        <v-btn text @click="formIsVisible = !formIsVisible">
-          Update Profile
-        </v-btn>
-      </v-card-actions>
-
       <form v-if="formIsVisible" class="p-2">
-        <v-text-field
-          type="text"
-          placeholder="First Name"
-          v-model="whoami.first_name"
-        ></v-text-field>
-        <v-text-field
-          :value="whoami.last_name"
-          type="text"
-          placeholder="Last Name"
-        ></v-text-field>
-        <v-text-field
-          v-model="whoami.email"
-          type="text"
-          placeholder="Email"
-        ></v-text-field>
-        <v-text-field
-          type="text"
-          v-model="whoami.date_of_birth"
-          placeholder="Date Of Birth"
-        ></v-text-field>
-        <v-btn
-          dark
-          color="grey darken-2"
-          block
-          x-large
-          class="btn-block"
-          @click="updateUser"
-          >Update</v-btn
-        >
+        <div class="container">
+          <v-text-field
+            type="text"
+            placeholder="First Name"
+            v-model="first_name"
+          ></v-text-field>
+          <v-text-field
+            v-model="last_name"
+            type="text"
+            placeholder="Last Name"
+          ></v-text-field>
+          <v-text-field
+            v-model="email"
+            type="text"
+            placeholder="Email"
+          ></v-text-field>
+          <v-text-field
+            type="text"
+            v-model="date_of_birth"
+            placeholder="Date Of Birth"
+          ></v-text-field>
+        </div>
+
       </form>
     </v-card>
     <!-- 
@@ -56,7 +45,6 @@
 </template>
 
 <script>
-// import axios from "axios";
 import { mapState, mapActions } from "vuex";
 export default {
   data() {
@@ -64,31 +52,46 @@ export default {
       formIsVisible: false
     };
   },
-  mounted() {
-    // console.log(this.whoami.first_name)
+  methods: {
+    ...mapActions(['whoamiUpdate'])
   },
   computed: {
     ...mapState({
       whoami: state => state.authentication.whoami
-    })
-  },
-  methods: {
-    ...mapActions(["whoamiUpdate"]),
-    updateUser(event) {
-      // let payload = {
-      //   'refresh_token': this.whoami.refresh_token,
-      //   'access_token': this.whoami.access_token,
-      //   'id': this.whoami.id,
-      //   'username': this.whoami.username,
-      //   'email': this.whoami.email,
-      //   'first_name': this.whoami.first_name,
-      //   'last_name': this.whoami.last_name,
-      //   'date_of_birth': this.whoami.date_of_birth,
-      //   'photo': this.whoami.photo,
-      // }
-      console.log(event.target.value);
-      // this.$store.dispatch("update_current_user_action", this.payload);
+    }),
+    first_name: {
+      get () {
+        return this.whoami.first_name
+      },
+      set (value) {
+        this.whoamiUpdate({key:'first_name', value});
+      }
+    },
+    last_name: {
+      get () {
+        return this.whoami.last_name
+      },
+      set (value) {
+        this.whoamiUpdate({key:'last_name', value});
+      }
+    },
+    email: {
+      get () {
+        return this.whoami.email
+      },
+      set (value) {
+        this.whoamiUpdate({key:'email', value});
+      }
+    },
+    date_of_birth: {
+      get () {
+        return this.whoami.date_of_birth
+      },
+      set (value) {
+        this.whoamiUpdate({key:'date_of_birth', value}); 
+      }
     }
-  }
+  },
+
 };
 </script>

@@ -32,7 +32,7 @@ export default {
   methods: {
     handleLogout(event) {
       event.preventDefault();
-      this.logout();
+      this.$store.commit("LOGOUT");
       if (this.$route.path != "/") {
         this.$router.push("/");
       }

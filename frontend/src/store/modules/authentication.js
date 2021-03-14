@@ -8,8 +8,7 @@ const actions = {
   login({ commit }, { username, password }) {
     let credentials = { username, password };
 
-    axios
-      .create({
+    axios.create({
         baseURL: "http://localhost:8000",
         timeout: 5000,
         headers: {
@@ -17,13 +16,26 @@ const actions = {
           accept: "application/json"
         }
       })
-      .post("/account/get-token-for-user/", credentials)
+      .post("/account/get-token/", credentials)
       .then(response => {
         commit("LOGIN", response.data);
       });
   },
-  logout({ commit }) {
-    commit("LOGOUT");
+  whoamiUpdate({ commit }, {key, value}) {
+    const sendPatchRequest = async () => {
+      try {
+        const response = await axios.post('http://localhost:8000/account/update/', { 
+          id: 1,  
+          key: key,
+          value: value
+        });
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    sendPatchRequest()
+    commit('UPDATE_WHOAMI', {key, value})
   }
 };
 
@@ -33,6 +45,9 @@ const mutations = {
   },
   LOGOUT(state) {
     state.whoami = "";
+  },
+  UPDATE_WHOAMI(state, {key, value}) {
+    state.whoami[key] = value;
   }
 };
 
