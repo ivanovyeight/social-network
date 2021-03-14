@@ -3,12 +3,14 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-    path('get-token/', views.get_token),
+    path('login/', views.login),
+    path('refresh-token/', views.refresh_token),
+
     path('update/', views.update),
 
     
-    path('login/', auth_views.LoginView.as_view(), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    # path('login/', auth_views.LoginView.as_view(), name='login'),
+    # path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', views.register, name='register'),
 
     path('timeline/', views.timeline, name='timeline'),

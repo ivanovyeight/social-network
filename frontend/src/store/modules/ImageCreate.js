@@ -1,9 +1,6 @@
 import axios from "axios";
 import Vue from "vue";
 
-// LEAVE IT AS IT IS FOR NOW, UPDATE WHEN AUTH READY
-const ACCESS_TOKEN = "___";
-
 const state = {
   data: {
     title: "",
@@ -16,12 +13,13 @@ const actions = {
   saveImageToState({ commit }, object) {
     commit("setImageState", object);
   },
-  async sendImageObject() {
+  async sendImageObject(state) {
+    let headers = {
+      Authorization: `Bearer ${state.whoami.access_token}`
+    };
+
     await axios.post("/images/api/create/", state.data, {
-      headers: {
-        Authorization: `Bearer ${window.localStorage.getItem(ACCESS_TOKEN)}`,
-        "Content-Type": "application/json"
-      }
+      headers
     });
   }
 };

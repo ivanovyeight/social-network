@@ -8,7 +8,8 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_POST
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -20,7 +21,15 @@ from .serializers import UserSerializer
 
 
 @api_view(["POST"])
-def get_token(request):
+def register(request):
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["POST"])
+def login(request):
     username = request.data['username']
     password = request.data['password']
     check_if_user_exists = User.objects.filter(username=username).exists()
@@ -42,14 +51,17 @@ def get_token(request):
             })
 
 @api_view(["POST"])
-def register(request):
-    serializer = UserSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# @permission_classes([IsAuthenticated])
+def refresh_token(request):
+    access_token = RefreshToken.for_user(request.user)
+
+    return Response({
+        'access_token': str(access_token)
+    })
+
 
 @api_view(["POST"])
+@permission_classes([IsAuthenticated])
 def timeline(request):
     user = User.objects.get(username=request.data['username'])
     actions = Action.objects.exclude(user=user)
@@ -64,6 +76,7 @@ def timeline(request):
     return Response({'actions': actions})
 
 @api_view(["POST"])
+@permission_classes([IsAuthenticated])
 def update(request):
     if request.data['key'] == 'date_of_birth':
         Profile.objects.update_or_create(

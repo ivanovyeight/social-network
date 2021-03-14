@@ -8,37 +8,26 @@ const actions = {
   login({ commit }, { username, password }) {
     let credentials = { username, password };
 
-    axios
-      .create({
-        baseURL: "http://localhost:8000",
-        timeout: 5000,
-        headers: {
-          "Content-Type": "application/json",
-          accept: "application/json"
-        }
-      })
-      .post("/account/get-token/", credentials)
-      .then(response => {
-        commit("LOGIN", response.data);
-      });
+    axios.post("/account/login/", credentials).then(response => {
+      commit("LOGIN", response.data);
+    });
   },
-  whoamiUpdate({ commit, state }, { key, value }) {
-    const sendPatchRequest = async () => {
-      try {
-        const response = await axios.post(
-          "http://localhost:8000/account/update/",
-          {
-            id: state.whoami.id,
-            key: key,
-            value: value
-          }
-        );
-        console.log(response.data);
-      } catch (error) {
-        console.error(error);
-      }
+  async whoamiUpdate({ commit, state }, { key, value }) {
+    console.log(state.whoami.access_token);
+    let payload = {
+      id: state.whoami.id,
+      key: key,
+      value: value
     };
-    sendPatchRequest();
+
+    let headers = {
+      Authorization: `Bearer ${state.whoami.access_token}`
+    };
+
+    await axios.post("http://localhost:8000/account/update/", payload, {
+      headers
+    });
+
     commit("WHOAMI_UPDATE", { key, value });
   }
 };
