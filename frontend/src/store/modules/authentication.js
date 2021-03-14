@@ -22,13 +22,13 @@ const actions = {
         commit("LOGIN", response.data);
       });
   },
-  whoamiUpdate({ commit }, { key, value }) {
+  whoamiUpdate({ commit,state }, { key, value }) {
     const sendPatchRequest = async () => {
       try {
         const response = await axios.post(
           "http://localhost:8000/account/update/",
           {
-            id: 1,
+            id: state.whoami.id,
             key: key,
             value: value
           }
