@@ -33,26 +33,15 @@ export default {
     return {
       username: "",
       password: "",
-      nextPath: "/",
       errorMessage: ""
     };
-  },
-  mounted() {
-    this.updateAfterLoginNextPath();
   },
   methods: {
     handleLogin(event) {
       event.preventDefault();
       this.login({ username: this.username, password: this.password }).then(
-        () => {
-          this.$router.push("/profile");
-        }
+        this.$router.push("/")
       );
-    },
-    updateAfterLoginNextPath() {
-      if ("next" in this.$route.query) {
-        this.nextPath = this.$route.query.next;
-      }
     },
     ...mapActions(["login"])
   }

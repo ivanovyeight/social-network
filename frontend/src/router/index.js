@@ -35,16 +35,19 @@ const router = new VueRouter({
 
 const PUBLIC_URLS = ["/", "/login", "/register"];
 
-function accessDenied(path) {
-  !store.state.authentication.whoami.access_token &&
-    !PUBLIC_URLS.includes(path);
+function accessGranted(path) {
+  return (
+    (store.state.authentication.whoami.access_token &&
+      store.state.authentication.whoami.refresh_token) ||
+    PUBLIC_URLS.includes(path)
+  );
 }
 
 router.beforeEach((to, from, next) => {
-  if (accessDenied(to.path)) {
-    next(`/login?next=${to.path}`);
-  } else {
+  if (accessGranted(to.path)) {
     next();
+  } else {
+    next("/login");
   }
 });
 
