@@ -15,7 +15,7 @@ const actions = {
     commit("setImageState", object);
   },
 
-  async sendImageObject({ commit,state }) {
+  async sendImageObject({ commit, state }) {
     let response = await axios.post("/images/api/create/", state.data, {
       headers: {
         Authorization: `Bearer ${state.whoami.access_token}`,
