@@ -21,7 +21,7 @@
 
         <v-btn text @click="$vuetify.theme.dark = !$vuetify.theme.dark">
           <v-icon v-if="$vuetify.theme.dark">
-            mdi-weather-night
+            mdi-moon-waning-crescent
           </v-icon>
           <v-icon v-else>
             mdi-weather-sunny

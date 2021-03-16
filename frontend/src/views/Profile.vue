@@ -1,20 +1,30 @@
 <template>
-  <div class="container">
-    <v-row>
-      <v-card float-left class="mx-auto my-5 col-md-2">
-        <v-img
-          height="350"
-          src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
-        ></v-img>
-        <v-card-title class="m-4">
-          {{ whoami.username }}
-          <v-spacer></v-spacer>
-          <v-icon @click="formIsVisible = !formIsVisible"
-            >mdi-content-copy</v-icon
-          >
+  <v-container class="row my-5 mx-auto">
+    <v-card class="col-md-3">
+      <v-row class="my-auto mx-auto">
+        <v-avatar color="grey" size="64" round>
+          <v-img
+            src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+            alt="..."
+          ></v-img>
+        </v-avatar>
+        <v-card-title>
+          <template v-if="whoami.first_name || whoami.last_name">
+            {{ whoami.first_name }}
+            {{ whoami.last_name }}
+          </template>
+          <template v-else>
+            {{ whoami.username }}
+          </template>
         </v-card-title>
+        <v-spacer></v-spacer>
+        <v-btn text @click="formIsVisible = !formIsVisible">
+          <v-icon>mdi-dots-horizontal</v-icon>
+        </v-btn>
+      </v-row>
 
-        <form v-if="formIsVisible" class="p-2">
+      <template v-if="formIsVisible">
+        <form>
           <div class="container">
             <v-text-field
               type="text"
@@ -38,30 +48,16 @@
             ></v-text-field>
           </div>
         </form>
-      </v-card>
+      </template>
+    </v-card>
 
-      <v-container fluid fill-height class="mx-auto my-2 col-md-9">
-        <v-card float-right class="col-md-12">
-          <v-card-title>
-            USERNAME_POSTED_PLACEHOLDER:
-          </v-card-title>
-
-          <v-card-subtitle>
-            TIMESTAMP_PLACEHOLDER
-          </v-card-subtitle>
-
-          <v-card-actions>
-            <v-btn color="orange lighten-2" text block>
-              DETAILS
-            </v-btn>
-          </v-card-actions>
-          <!-- <div v-for="action in actions" :key="action.id" class="col-md-12">
+    <v-card class="mx-auto col-8">
+      <v-btn text block muted>Latest Events:</v-btn>
+      <!-- <div v-for="action in actions" :key="action.id" class="col-md-12">
               ACTION_PLACEHOLDER
           </div> -->
-        </v-card>
-      </v-container>
-    </v-row>
-  </div>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
