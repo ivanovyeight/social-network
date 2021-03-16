@@ -1,15 +1,17 @@
 from actions.models import Action
 from actions.utils import create_action
 from common.decorators import ajax_required
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_POST
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from account.models import Contact
 
@@ -26,22 +28,88 @@ def register(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@login_required
-def dashboard(request):
-    actions = Action.objects.exclude(user=request.user)
-    following_ids = request.user.following.values_list('id', flat=True)
+@api_view(["POST"])
+def login(request):
+    username = request.data['username']
+    password = request.data['password']
+    check_if_user_exists = User.objects.filter(username=username).exists()
+    
+    if check_if_user_exists:
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh_token': str(refresh),
+                'access_token': str(refresh.access_token),
+                'id': user.id,
+                'username': user.username,
+                'email': user.email or None,
+                'first_name': user.first_name or None,
+                'last_name': user.last_name or None,
+                'date_of_birth': user.profile.date_of_birth or None,
+                'photo': user.profile.photo or None,
+            })
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def timeline(request):
+    user = User.objects.get(username=request.data['username'])
+    actions = Action.objects.exclude(user=user)
+    following_ids = user.following.values_list('id', flat=True)
 
     if following_ids:
         actions = actions.filter(user_id__in=following_ids)
-        # второй аргумент должен быть user__profile
-    actions = actions.select_related('user', 'user').prefetch_related(
+
+    actions = actions.select_related('user', 'user__profile').prefetch_related(
         'target')[:10]
 
-    # Create profile for users created not with register form
-    Profile.objects.get_or_create(user=request.user)
+    return Response({'actions': actions})
 
-    return render(request, 'account/dashboard.html',
-                  {'section': 'dashboard', 'actions': actions})
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def update(request):
+    if request.data['key'] == 'date_of_birth':
+        Profile.objects.update_or_create(
+            user = request.data['id'],
+            defaults = {
+                request.data['key']: request.data['value']
+            },
+        )
+    else:
+        User.objects.update_or_create(
+            id = request.data['id'],
+            defaults = {
+                request.data['key']: request.data['value']
+            },
+        )
+    return Response({
+        'data': 'success'
+    })
+    # user_form = UserEditForm(instance=request.user,data=request.POST)
+    # profile_form = ProfileEditForm(instance=request.user.profile,
+    #                             data=request.POST, files=request.FILES)
+    
+    # if user_form.is_valid() and profile_form.is_valid():
+    #     user_form.save()
+    #     profile_form.save()
+
+## REPLACE
+# @login_required
+# def dashboard(request):
+#     actions = Action.objects.exclude(user=request.user)
+#     following_ids = request.user.following.values_list('id', flat=True)
+
+#     if following_ids:
+#         actions = actions.filter(user_id__in=following_ids)
+#         # второй аргумент должен быть user__profile
+#     actions = actions.select_related('user', 'user').prefetch_related(
+#         'target')[:10]
+
+#     # Create profile for users created not with register form
+#     Profile.objects.get_or_create(user=request.user)
+
+#     return render(request, 'account/dashboard.html',
+#                   {'section': 'dashboard', 'actions': actions})
 
 
 @login_required
@@ -103,18 +171,18 @@ def user_follow(request):
 #     return render(request, 'account/register.html', {'form': form})
 
 
-@login_required
-def edit(request):
-    if request.method == 'POST':
-        user_form = UserEditForm(instance=request.user,data=request.POST)
-        profile_form = ProfileEditForm(instance=request.user.profile,
-                                    data=request.POST, files=request.FILES)
+# @login_required
+# def edit(request):
+#     if request.method == 'POST':
+#         user_form = UserEditForm(instance=request.user,data=request.POST)
+#         profile_form = ProfileEditForm(instance=request.user.profile,
+#                                     data=request.POST, files=request.FILES)
         
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-    else:
-        user_form = UserEditForm(instance=request.user)
-        profile_form = ProfileEditForm(instance=request.user.profile)
-    return render(request,'account/edit.html', {'user_form': user_form,
-                                                'profile_form': profile_form})
+#         if user_form.is_valid() and profile_form.is_valid():
+#             user_form.save()
+#             profile_form.save()
+#     else:
+#         user_form = UserEditForm(instance=request.user)
+#         profile_form = ProfileEditForm(instance=request.user.profile)
+#     return render(request,'account/edit.html', {'user_form': user_form,
+#                                                 'profile_form': profile_form})
