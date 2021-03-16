@@ -18,12 +18,15 @@
           <v-btn text class="mx-2" to="/about">About</v-btn>
           <v-btn text class="mx-2" v-on:click="handleLogout">Logout</v-btn>
         </template>
-        <v-btn
-          text
-          class="mx-2"
-          @click="$vuetify.theme.dark = !$vuetify.theme.dark"
-          >TOGGLE_DARK_THEME</v-btn
-        >
+
+        <v-btn text @click="$vuetify.theme.dark = !$vuetify.theme.dark">
+          <v-icon v-if="$vuetify.theme.dark">
+            mdi-weather-night
+          </v-icon>
+          <v-icon v-else>
+            mdi-weather-sunny
+          </v-icon>
+        </v-btn>
       </div>
     </v-app-bar>
 

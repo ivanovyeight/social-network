@@ -51,16 +51,6 @@ def login(request):
             })
 
 @api_view(["POST"])
-# @permission_classes([IsAuthenticated])
-def refresh_token(request):
-    access_token = RefreshToken.for_user(request.user)
-
-    return Response({
-        'access_token': str(access_token)
-    })
-
-
-@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def timeline(request):
     user = User.objects.get(username=request.data['username'])

@@ -13,7 +13,6 @@ const actions = {
     });
   },
   async whoamiUpdate({ commit, state }, { key, value }) {
-    console.log(state.whoami.access_token);
     let payload = {
       id: state.whoami.id,
       key: key,
@@ -23,6 +22,7 @@ const actions = {
     let headers = {
       Authorization: `Bearer ${state.whoami.access_token}`
     };
+    // console.log(headers);
 
     await axios.post("http://localhost:8000/account/update/", payload, {
       headers
