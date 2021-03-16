@@ -68,38 +68,18 @@ export default {
     description: "",
     url: ""
   }),
-
-    methods: {
-      imageValidation(){
-        let img = document.createElement('img')
-        img.src = this.url
-        if (img.width == 0){
-          return false;
-        }
-      },
-      async submit () {
-        const isValid = await this.$refs.observer.validate();
-        if (this.imageValidation()===false || !isValid){
-          console.log("false")
-          return false
-        }
-        else{
-          let obj = {
-            title: this.title,
-            url: this.url,
-            description: this.description,
-        }
-        this.saveImageToState(obj)
-        this.sendImageObject()
-
-        }
-
-      },
-      ...mapActions(["sendImageObject", "saveImageToState"])
+  methods: {
+    ...mapActions(["sendImageObject", "saveImageToState"]),
+    imageValidation() {
+      let img = document.createElement("img");
+      img.src = this.url;
+      if (img.width == 0) {
+        return false;
+      }
     },
-    submit() {
-      this.$refs.observer.validate();
-      if (this.imageValidation() === false) {
+    async submit() {
+      const isValid = await this.$refs.observer.validate();
+      if (this.imageValidation() === false || !isValid) {
         console.log("false");
         return false;
       } else {
@@ -113,6 +93,21 @@ export default {
       }
     },
     ...mapActions(["sendImageObject", "saveImageToState"])
+  },
+  submit() {
+    this.$refs.observer.validate();
+    if (this.imageValidation() === false) {
+      console.log("false");
+      return false;
+    } else {
+      let obj = {
+        title: this.title,
+        url: this.url,
+        description: this.description
+      };
+      this.saveImageToState(obj);
+      this.sendImageObject();
+    }
   },
   computed: {
     ...mapGetters(["imageData"])
