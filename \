@@ -1,0 +1,42 @@
+<template>
+  <div>
+    Hello, {{title}}
+  </div>
+
+</template>
+
+
+
+<script>
+  import { mapGetters, mapActions } from "vuex";
+  export default{
+    data:() => ({
+      title: "",
+
+    }),
+    methods:{
+      ...mapActions['getImage'],
+
+    },
+    computed: {
+      ...mapGetters['getImageDetail'],
+
+    },
+    created(){
+      this.$store.dispatch('getImage')
+    },
+    updated(){
+      console.log(this.$store.getters.getImageDetail.title)
+      this.title = this.$store.getters.getImageDetail.title
+    },
+
+  };
+</script>
+
+
+
+
+
+<style>
+
+</style>

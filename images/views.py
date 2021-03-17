@@ -30,17 +30,18 @@ def image_create(request):
     except Exception:
         return Response('failure')
 
-    # return redirect(new_item.get_absolute_url())
 
-
+@api_view(['GET',])
 def image_detail(request, id, slug):
     image = get_object_or_404(Image, id=id, slug=slug)
     total_views = r.incr(f'image:{image.id}:views')
     r.zincrby('image_ranking', image.id, 1)
-
-    return render(request, 'images/image/detail.html',
-                  {'section': 'images', 'image': image,
-                   'total_views': total_views})
+    image = ImageSerializer(image)
+    response_data = {
+        'image': image.data,
+        'total_views': total_views,
+    }
+    return Response(response_data)
 
 
 @login_required

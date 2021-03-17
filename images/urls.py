@@ -10,5 +10,7 @@ urlpatterns = [
     path('', views.image_list, name='list'),
 
     #api
-    path('api/create/', views.image_create, name='image_create')
+    path('api/create/', views.image_create, name='image_create'),
+    path('api/detail/<int:id>/<slug:slug>/', views.image_detail, name='detail'),
+
 ]
