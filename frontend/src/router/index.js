@@ -3,11 +3,13 @@ import VueRouter from "vue-router";
 import store from "../store/index";
 
 import Home from "../views/Home.vue";
-import Login from "../views/Login.vue";
-import Register from "../views/Register.vue";
+
 import CreateImage from "../views/CreateImage.vue";
 import ImageDetail from "../views/ImageDetail.vue";
 import Profile from "../views/Profile.vue";
+
+import Login from "../views/authentication/Login.vue";
+import Register from "../views/authentication/Register.vue";
 
 Vue.use(VueRouter);
 
