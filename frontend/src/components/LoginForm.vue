@@ -3,15 +3,6 @@
     <v-form @submit.prevent="onSubmit">
       <v-container>
         <ValidationProvider
-          name="Email"
-          rules="email|required"
-          v-slot="{ errors }"
-        >
-          <v-text-field v-model="email" label="Email" required></v-text-field>
-          <span class="red--text">{{ errors[0] }}</span>
-        </ValidationProvider>
-
-        <ValidationProvider
           name="Username"
           rules="required"
           v-slot="{ errors }"
@@ -46,18 +37,17 @@
         class="btn-block"
         type="submit"
       >
-        Register
+        Login
       </v-btn>
     </v-form>
   </ValidationObserver>
 </template>
 
 <script>
-import axios from "axios";
+import { mapActions } from "vuex";
 import { extend, ValidationProvider, ValidationObserver } from "vee-validate";
-import { required, email } from "vee-validate/dist/rules";
+import { required } from "vee-validate/dist/rules";
 
-extend("email", email);
 extend("required", required);
 
 export default {
@@ -67,7 +57,6 @@ export default {
   },
   data() {
     return {
-      email: "",
       username: "",
       password: ""
     };
@@ -79,22 +68,13 @@ export default {
           return;
         }
 
-        axios
-          .post("http://localhost:8000/account/register/", {
-            email: this.email,
-            username: this.username,
-            password: this.password
-          })
-          .then(() => {
-            this.$router.push({ name: "Login" });
-          });
+        this.login({ username: this.username, password: this.password }).then(
+          this.$router.push("/")
+        );
 
-        // Wait until the models are updated in the UI
-        this.$nextTick(() => {
-          this.$refs.form.reset();
-        });
       });
-    }
+    },
+    ...mapActions(["login"])
   }
 };
 </script>
