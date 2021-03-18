@@ -152,7 +152,12 @@ ABSOLUTE_URL_OVERRIDES = {
 # Включить, если проблема с отображением превью картинок
 # THUMBNAIL_DEBUG = True
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST_USER = '5c4dbdff3a2b06'
+EMAIL_HOST_PASSWORD = '683d6a563ba997'
+EMAIL_PORT = '2525'
 
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
@@ -177,3 +182,4 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:8080',
     'http://127.0.0.1:8080',
 ]
+

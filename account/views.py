@@ -1,3 +1,4 @@
+from os import stat
 from actions.models import Action
 from actions.utils import create_action
 from common.decorators import ajax_required
@@ -18,6 +19,20 @@ from account.models import Contact
 from .forms import ProfileEditForm, UserEditForm, UserRegistrationForm
 from .models import Profile
 from .serializers import UserSerializer
+from django.core.mail import send_mail
+
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+
+@api_view(["POST"])
+def activate(request):
+    try:
+        email = urlsafe_base64_decode(request.data["token"]).decode("utf-8")
+        user = User.objects.get(email=email)
+        user.is_active = True
+        user.save()
+        return Response(status=status.HTTP_200_OK)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(["POST"])
@@ -25,30 +40,47 @@ def register(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
+
+        urlsafe_base64_encode
+
+        email = request.data["email"].encode("utf-8")
+        activation_token = urlsafe_base64_encode(email)
+        
+        send_mail(
+            "Welcome! Activate your account.",
+            f"Hello! To activate your account follow this link: http://localhost:8080/activate?token={activation_token}",
+            'admin@socialnetwork.com',
+            [request.data["email"]],
+            fail_silently=False
+        )
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["POST"])
 def login(request):
+    
     username = request.data['username']
     password = request.data['password']
-    check_if_user_exists = User.objects.filter(username=username).exists()
+    # check_if_user_exists = User.objects.filter(username=username).exists()
     
-    if check_if_user_exists:
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                'refresh_token': str(refresh),
-                'access_token': str(refresh.access_token),
-                'id': user.id,
-                'username': user.username,
-                'email': user.email or None,
-                'first_name': user.first_name or None,
-                'last_name': user.last_name or None,
-                'date_of_birth': user.profile.date_of_birth or None,
-                'photo': user.profile.photo or None,
-            })
+    # if check_if_user_exists:
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        refresh = RefreshToken.for_user(user)
+        data = {
+            'refresh_token': str(refresh),
+            'access_token': str(refresh.access_token),
+            'id': user.id,
+            'username': user.username,
+            'email': user.email or None,
+            'first_name': user.first_name or None,
+            'last_name': user.last_name or None,
+            'date_of_birth': user.profile.date_of_birth or None,
+            'photo': user.profile.photo or None,
+        }
+        return Response(data, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
