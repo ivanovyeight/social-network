@@ -18,7 +18,7 @@ from account.models import Contact
 
 from .models import Profile
 from .serializers import UserSerializer
-from .tasks import activation_email, add
+from .tasks import activation_email
 
 
 @api_view(["POST"])
@@ -96,9 +96,9 @@ def update(request):
                 request.data['key']: request.data['value']
             },
         )
-    return Response({
-        'data': 'success'
-    })
+
+    return Response(status=status.HTTP_200_OK)
+
     # user_form = UserEditForm(instance=request.user,data=request.POST)
     # profile_form = ProfileEditForm(instance=request.user.profile,
     #                             data=request.POST, files=request.FILES)
