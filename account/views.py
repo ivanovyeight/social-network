@@ -19,9 +19,16 @@ from account.models import Contact
 from .forms import ProfileEditForm, UserEditForm, UserRegistrationForm
 from .models import Profile
 from .serializers import UserSerializer
-from django.core.mail import send_mail
 
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+
+from . tasks import add, activation_email
+
+@api_view(["GET"])
+def celery_test(request):
+    result = add.delay()
+    return Response({'qwe': "result"})
+
 
 @api_view(["POST"])
 def activate(request):
@@ -41,18 +48,7 @@ def register(request):
     if serializer.is_valid():
         serializer.save()
 
-        urlsafe_base64_encode
-
-        email = request.data["email"].encode("utf-8")
-        activation_token = urlsafe_base64_encode(email)
-        
-        send_mail(
-            "Welcome! Activate your account.",
-            f"Hello! To activate your account follow this link: http://localhost:8080/activate?token={activation_token}",
-            'admin@socialnetwork.com',
-            [request.data["email"]],
-            fail_silently=False
-        )
+        activation_email.delay(request.data["username"], request.data["email"])
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

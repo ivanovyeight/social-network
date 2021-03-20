@@ -7,6 +7,9 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
+    path('celery/', views.celery_test),
+
+
     path('activate/', views.activate),
 
 
