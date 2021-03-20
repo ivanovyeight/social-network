@@ -21,11 +21,6 @@ from .serializers import UserSerializer
 from .tasks import activation_email, add
 
 
-@api_view(["GET"])
-def celery_test(request):
-    result = add.delay()
-    return Response({'qwe': "result"})
-
 @api_view(["POST"])
 def activate(request):
     try:
@@ -36,7 +31,6 @@ def activate(request):
         return Response(status=status.HTTP_200_OK)
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
-
 
 @api_view(["POST"])
 def register(request):
@@ -131,7 +125,6 @@ def update(request):
 #     return render(request, 'account/dashboard.html',
 #                   {'section': 'dashboard', 'actions': actions})
 
-
 @login_required
 def user_list(request):
     """ Список всех активных пользователей. """
@@ -145,7 +138,6 @@ def user_detail(request, username):
     user = get_object_or_404(User, username=username, is_active=True)
     return render(request, 'account/user/detail.html',
                   {'section': 'people', 'user': user})
-
 
 @ajax_required
 @require_POST
@@ -171,7 +163,6 @@ def user_follow(request):
             return JsonResponse({'status': 'ok'})
     return JsonResponse({'status': 'ok'})
 
-
 # def register(request):
 #     if request.method == 'POST':
 #         form = UserRegistrationForm(request.POST)
@@ -189,7 +180,6 @@ def user_follow(request):
 #     else:
 #         form = UserRegistrationForm()
 #     return render(request, 'account/register.html', {'form': form})
-
 
 # @login_required
 # def edit(request):
