@@ -1,4 +1,3 @@
-from os import stat
 from actions.models import Action
 from actions.utils import create_action
 from common.decorators import ajax_required
@@ -7,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.http import require_POST
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -16,19 +16,15 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from account.models import Contact
 
-from .forms import ProfileEditForm, UserEditForm, UserRegistrationForm
 from .models import Profile
 from .serializers import UserSerializer
+from .tasks import activation_email, add
 
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-
-from . tasks import add, activation_email
 
 @api_view(["GET"])
 def celery_test(request):
     result = add.delay()
     return Response({'qwe': "result"})
-
 
 @api_view(["POST"])
 def activate(request):
@@ -56,12 +52,8 @@ def register(request):
 
 @api_view(["POST"])
 def login(request):
-    
     username = request.data['username']
     password = request.data['password']
-    # check_if_user_exists = User.objects.filter(username=username).exists()
-    
-    # if check_if_user_exists:
     user = authenticate(request, username=username, password=password)
     if user is not None:
         refresh = RefreshToken.for_user(user)
