@@ -183,7 +183,7 @@ CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:8080',
 ]
 
-CELERY_BROKER_URL = "amqp://localhost:5672"
+CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
