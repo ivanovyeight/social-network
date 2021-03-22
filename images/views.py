@@ -7,11 +7,12 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from actions.utils import create_action
 from common.decorators import ajax_required
 from .serializers import ImageSerializer
+from rest_framework.permissions import IsAuthenticated
 
 from .forms import ImageCreationForm
 from .models import Image
@@ -20,27 +21,30 @@ r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT,
                       db=settings.REDIS_DB)
 #login required
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def image_create(request):
     try:
         serializer = ImageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.validated_data['user'] = request.user
             serializer.save()
+        print(serializer.slug)
         return Response('success')
     except Exception:
         return Response('failure')
 
-    # return redirect(new_item.get_absolute_url())
 
-
+@api_view(['GET',])
 def image_detail(request, id, slug):
     image = get_object_or_404(Image, id=id, slug=slug)
     total_views = r.incr(f'image:{image.id}:views')
     r.zincrby('image_ranking', image.id, 1)
-
-    return render(request, 'images/image/detail.html',
-                  {'section': 'images', 'image': image,
-                   'total_views': total_views})
+    image = ImageSerializer(image)
+    response_data = {
+        'image': image.data,
+        'total_views': total_views,
+    }
+    return Response(response_data)
 
 
 @login_required

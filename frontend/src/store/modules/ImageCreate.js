@@ -1,6 +1,7 @@
 import axios from "axios";
 import Vue from "vue";
 import router from "../../router/index";
+import authentication from "./authentication.js"
 
 const state = {
   data: {
@@ -18,7 +19,7 @@ const actions = {
   async sendImageObject({ commit, state }) {
     let response = await axios.post("/images/api/create/", state.data, {
       headers: {
-        Authorization: `Bearer ${state.whoami.access_token}`,
+        Authorization: `Bearer ${authentication.state.whoami.access_token}`,
         "Content-Type": "application/json"
       }
     });
@@ -43,9 +44,7 @@ const mutations = {
 };
 
 const getters = {
-  imageData() {
-    return state.data;
-  }
+  imageData: state => state.data
 };
 
 export default {

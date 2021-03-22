@@ -16,9 +16,6 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     {% if request.user.is_authenticated %}
-                        <li {% if section == "dashboard" %} class="nav-item"{% endif %}>
-                            <a href="{% url 'dashboard' %}" class="nav-link">Profile</a>
-                        </li>
                         <li {% if section == 'images' %}class="nav-item"{% endif %}>
                             <a href="{% url 'images:list' %}" class="nav-link">Images</a>
                         </li>
@@ -42,9 +39,6 @@
 
                 <ul class="navbar-nav ml-auto">
                     {% if request.user.is_authenticated %}
-                        <li class="nav-item">
-                            <a href="{% url 'logout' %}" class="nav-link">Logout</a>
-                        </li>
                         {% else %}
                         <li class="nav-item">
                             <a href="{% url 'login' %}" class="nav-link" >Login</a>
@@ -58,27 +52,6 @@
         </nav>
 
         <div id="header">
-            <!-- {% if request.user.is_authenticated %}
-                <ul class="menu">
-                    <li {% if section == "dashboard" %} class="selected"{% endif %}>
-                        <a href="{% url 'dashboard' %}">My dashboard</a>
-                    </li>
-                    <li {% if section == 'images' %}class="selected"{% endif %}>
-                        <a href="#">Images</a>
-                    </li>
-                    <li {% if section == "people" %}class="selected"{% endif %}>
-                        <a href="#">People</a>
-                    </li>
-                </ul>
-            {% endif %} -->
-            <!-- <span class="user">
-            {% if request.user.is_authenticated %}
-                Hello {{ request.user.first_name }},
-                    <a href="{% url "logout" %}">Logout</a>
-                {% else %}
-                    <a href="{% url "login" %}">Log-in</a>
-            {% endif %}
-            </span> -->
         </div>
         <div id="content">
             {% block content %}{% endblock %}
