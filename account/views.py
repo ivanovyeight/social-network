@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.http import require_POST
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -15,40 +16,53 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from account.models import Contact
 
-from .forms import ProfileEditForm, UserEditForm, UserRegistrationForm
 from .models import Profile
 from .serializers import UserSerializer
+from .tasks import activation_email
 
+
+@api_view(["POST"])
+def activate(request):
+    try:
+        email = urlsafe_base64_decode(request.data["token"]).decode("utf-8")
+        user = User.objects.get(email=email)
+        user.is_active = True
+        user.save()
+        return Response(status=status.HTTP_200_OK)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(["POST"])
 def register(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
+
+        activation_email.delay(request.data["username"], request.data["email"])
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["POST"])
 def login(request):
     username = request.data['username']
     password = request.data['password']
-    check_if_user_exists = User.objects.filter(username=username).exists()
-    
-    if check_if_user_exists:
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                'refresh_token': str(refresh),
-                'access_token': str(refresh.access_token),
-                'id': user.id,
-                'username': user.username,
-                'email': user.email or None,
-                'first_name': user.first_name or None,
-                'last_name': user.last_name or None,
-                'date_of_birth': user.profile.date_of_birth or None,
-                'photo': user.profile.photo or None,
-            })
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        refresh = RefreshToken.for_user(user)
+        data = {
+            'refresh_token': str(refresh),
+            'access_token': str(refresh.access_token),
+            'id': user.id,
+            'username': user.username,
+            'email': user.email or None,
+            'first_name': user.first_name or None,
+            'last_name': user.last_name or None,
+            'date_of_birth': user.profile.date_of_birth or None,
+            'photo': user.profile.photo or None,
+        }
+        return Response(data, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
@@ -82,9 +96,9 @@ def update(request):
                 request.data['key']: request.data['value']
             },
         )
-    return Response({
-        'data': 'success'
-    })
+
+    return Response(status=status.HTTP_200_OK)
+
     # user_form = UserEditForm(instance=request.user,data=request.POST)
     # profile_form = ProfileEditForm(instance=request.user.profile,
     #                             data=request.POST, files=request.FILES)
@@ -111,7 +125,6 @@ def update(request):
 #     return render(request, 'account/dashboard.html',
 #                   {'section': 'dashboard', 'actions': actions})
 
-
 @login_required
 def user_list(request):
     """ Список всех активных пользователей. """
@@ -125,7 +138,6 @@ def user_detail(request, username):
     user = get_object_or_404(User, username=username, is_active=True)
     return render(request, 'account/user/detail.html',
                   {'section': 'people', 'user': user})
-
 
 @ajax_required
 @require_POST
@@ -151,7 +163,6 @@ def user_follow(request):
             return JsonResponse({'status': 'ok'})
     return JsonResponse({'status': 'ok'})
 
-
 # def register(request):
 #     if request.method == 'POST':
 #         form = UserRegistrationForm(request.POST)
@@ -169,7 +180,6 @@ def user_follow(request):
 #     else:
 #         form = UserRegistrationForm()
 #     return render(request, 'account/register.html', {'form': form})
-
 
 # @login_required
 # def edit(request):

@@ -22,7 +22,6 @@ const actions = {
     let headers = {
       Authorization: `Bearer ${state.whoami.access_token}`
     };
-    // console.log(headers);
 
     await axios.post("http://localhost:8000/account/update/", payload, {
       headers

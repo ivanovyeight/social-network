@@ -71,7 +71,6 @@ export default {
         this.login({ username: this.username, password: this.password }).then(
           this.$router.push("/")
         );
-
       });
     },
     ...mapActions(["login"])
