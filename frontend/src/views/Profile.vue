@@ -1,62 +1,65 @@
 <template>
-  <v-container class="row my-5 mx-auto">
-    <v-card class="col-md-3">
-      <v-row class="my-auto mx-auto">
-        <v-avatar color="grey" size="64" round>
+  <v-container class="col-md-6">
+    <v-card class="my-2">
+      <div class="col-md-4 mx-auto">
+        <v-avatar color="grey" size="256" round>
           <v-img
             src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
             alt="..."
           ></v-img>
         </v-avatar>
-        <v-card-title>
-          <template v-if="whoami.first_name || whoami.last_name">
-            {{ whoami.first_name }}
-            {{ whoami.last_name }}
-          </template>
-          <template v-else>
-            {{ whoami.username }}
-          </template>
-        </v-card-title>
-        <v-spacer></v-spacer>
-        <v-btn text @click="formIsVisible = !formIsVisible">
+        <!-- <v-btn text @click="formIsVisible = !formIsVisible">
           <v-icon>mdi-dots-horizontal</v-icon>
-        </v-btn>
-      </v-row>
+        </v-btn> -->
+      </div>
 
-      <template v-if="formIsVisible">
-        <form>
-          <div class="container">
-            <v-text-field
-              type="text"
-              placeholder="First Name"
-              v-model="first_name"
-            ></v-text-field>
-            <v-text-field
-              v-model="last_name"
-              type="text"
-              placeholder="Last Name"
-            ></v-text-field>
-            <v-text-field
-              v-model="email"
-              type="text"
-              placeholder="Email"
-            ></v-text-field>
-            <v-text-field
-              type="text"
-              v-model="date_of_birth"
-              placeholder="Date Of Birth"
-            ></v-text-field>
-          </div>
-        </form>
-      </template>
+      <form>
+        <div class="container">
+          <v-row>
+            <v-col cols="12" md="6">
+              <v-text-field
+                type="text"
+                placeholder="First Name"
+                v-model="first_name"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field
+                v-model="last_name"
+                type="text"
+                placeholder="Last Name"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="12" md="6">
+              <v-text-field
+                v-model="email"
+                type="text"
+                placeholder="Email"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field
+                type="text"
+                v-model="date_of_birth"
+                placeholder="Date Of Birth"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+        </div>
+      </form>
     </v-card>
 
-    <v-card class="mx-auto col-8">
-      <v-btn text block muted>Latest Events:</v-btn>
-      <!-- <div v-for="action in actions" :key="action.id" class="col-md-12">
-              ACTION_PLACEHOLDER
-          </div> -->
+    <v-card class="my-2">
+      <v-container >
+      SUBSCRIPTION_SETTINGS
+
+      </v-container>
     </v-card>
+
+
   </v-container>
 </template>
 
@@ -65,7 +68,6 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
-      formIsVisible: false,
       actions: []
     };
   },

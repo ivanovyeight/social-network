@@ -2,7 +2,6 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import store from "../store/index";
 
-import Home from "../views/Home.vue";
 
 import CreateImage from "../views/CreateImage.vue";
 import ImageDetail from "../views/ImageDetail.vue";
@@ -11,11 +10,13 @@ import Profile from "../views/Profile.vue";
 import Login from "../views/authentication/Login.vue";
 import Register from "../views/authentication/Register.vue";
 import Activate from "../views/authentication/Activate.vue";
+import Timeline from "../views/Timeline.vue";
+
 
 Vue.use(VueRouter);
 
 const routes = [
-  { path: "/", name: "Home", component: Home },
+  { path: "/", name: "Timeline", component: Timeline },
   { path: "/register", name: "Register", component: Register },
   { path: "/activate", name: "Activate", component: Activate },
   { path: "/login", name: "Login", component: Login },
@@ -39,7 +40,7 @@ const router = new VueRouter({
   routes
 });
 
-const PUBLIC_URLS = ["/", "/login", "/register", "/activate"];
+const PUBLIC_URLS = ["/login", "/register", "/activate"];
 
 function accessGranted(path) {
   return (
