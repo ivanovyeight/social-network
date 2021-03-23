@@ -15,7 +15,8 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.is_active = False
         user.save()
-        Profile.objects.get_or_create(user=user)
-        stripe.Customer.create(email=validated_data['email'])
+        
+        stripe_customer = stripe.Customer.create(email=validated_data['email'])
+        Profile.objects.get_or_create(user=user, defaults = {'stripe_id': stripe_customer['id']})
 
         return user
