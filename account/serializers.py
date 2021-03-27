@@ -1,7 +1,9 @@
-from rest_framework import serializers
-from django.contrib.auth.models import User
-from .models import Profile
 import stripe
+from django.contrib.auth.models import User
+from rest_framework import serializers
+
+from .models import Profile
+
 stripe.api_key = "sk_test_51FnL8pBruBQCsvNc7zdb4wo41fuj0jFcCRWqLuT9e3RbngC4FEOGOhqXTN6iOFTv6QNVuQ2BBxQCghn0CrplE1gU00ZvXKxayp"
 
 class UserSerializer(serializers.ModelSerializer):
