@@ -2,7 +2,6 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import store from "../store/index";
 
-
 import CreateImage from "../views/CreateImage.vue";
 import ImageDetail from "../views/ImageDetail.vue";
 import Profile from "../views/Profile.vue";
@@ -11,7 +10,6 @@ import Login from "../views/authentication/Login.vue";
 import Register from "../views/authentication/Register.vue";
 import Activate from "../views/authentication/Activate.vue";
 import Timeline from "../views/Timeline.vue";
-
 
 Vue.use(VueRouter);
 
@@ -22,7 +20,11 @@ const routes = [
   { path: "/login", name: "Login", component: Login },
   { path: "/profile", name: "Profile", component: Profile },
   { path: "/images/create", name: "Create Image", component: CreateImage },
-  { path: "/images/detail/:id/:slug", name: "Image Detail", component: ImageDetail },
+  {
+    path: "/images/detail/:id/:slug",
+    name: "Image Detail",
+    component: ImageDetail
+  },
   {
     path: "/about",
     name: "About",

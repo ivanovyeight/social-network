@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  export default {
-    name: "Timeline",
-  };
+export default {
+  name: "Timeline"
+};
 </script>
