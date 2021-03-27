@@ -12,7 +12,7 @@ const http = axios.create({
 });
 
 const refreshAuthLogic = failedRequest =>
-    http
+  http
     .post("http://localhost:8000/account/api/token/refresh/", {
       refresh: store.state.authentication.whoami.refresh_token
     })
@@ -20,7 +20,9 @@ const refreshAuthLogic = failedRequest =>
       let key = "access_token";
       let value = tokenRefreshResponse.data["access"];
       store.commit("WHOAMI_UPDATE", { key, value });
-      failedRequest.response.config.headers["Authorization"] = `Bearer ${tokenRefreshResponse.data["access"]}`;
+      failedRequest.response.config.headers[
+        "Authorization"
+      ] = `Bearer ${tokenRefreshResponse.data["access"]}`;
 
       return Promise.resolve();
     });
