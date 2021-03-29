@@ -23,26 +23,24 @@ from .tasks import activation_email
 
 @api_view(["POST"])
 def activate(request):
-    try:
-        email = urlsafe_base64_decode(request.data["token"]).decode("utf-8")
-        user = User.objects.get(email=email)
-        user.is_active = True
-        user.save()
-        return Response(status=status.HTTP_200_OK)
-    except:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    # try:
+    username = urlsafe_base64_decode(request.data["token"]).decode("utf-8")
+    user = User.objects.get(username=username)
+    user.is_active = True
+    user.save()
+    return Response(status=status.HTTP_200_OK)
+    # except:
+    #     return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(["POST"])
 def register(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-
         activation_email.delay(request.data["username"], request.data["email"])
-
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # else:
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["POST"])
 def login(request):
@@ -63,6 +61,9 @@ def login(request):
             'photo': user.profile.photo or None,
         }
         return Response(data, status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
