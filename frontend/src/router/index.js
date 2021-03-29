@@ -10,11 +10,13 @@ import Login from "../views/authentication/Login.vue";
 import Register from "../views/authentication/Register.vue";
 import Activate from "../views/authentication/Activate.vue";
 import Timeline from "../views/Timeline.vue";
+import About from "../views/About.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
-  { path: "/", name: "Timeline", component: Timeline },
+  { path: "/", name: "Home", component: About },
+  { path: "/timeline", name: "Timeline", component: Timeline },
   { path: "/register", name: "Register", component: Register },
   { path: "/activate", name: "Activate", component: Activate },
   { path: "/login", name: "Login", component: Login },
@@ -24,15 +26,6 @@ const routes = [
     path: "/images/detail/:id/:slug",
     name: "Image Detail",
     component: ImageDetail
-  },
-  {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
   }
 ];
 
@@ -42,7 +35,7 @@ const router = new VueRouter({
   routes
 });
 
-const PUBLIC_URLS = ["/login", "/register", "/activate"];
+const PUBLIC_URLS = ["/", "/login", "/register", "/activate"];
 
 function accessGranted(path) {
   return (
@@ -56,7 +49,7 @@ router.beforeEach((to, from, next) => {
   if (accessGranted(to.path)) {
     next();
   } else {
-    next("/login");
+    next(false);
   }
 });
 

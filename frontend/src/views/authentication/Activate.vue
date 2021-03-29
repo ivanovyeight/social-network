@@ -16,21 +16,21 @@ export default {
     };
   },
   mounted() {
-    console.log(`${this.$route.query.token}`);
-    axios
-      .post("http://localhost:8000/account/activate/", {
-        token: this.$route.query.token
-      })
-      .then(
-        setTimeout(() => {
-          this.activated = true;
-        }, 4000)
-      )
-      .then(
-        setTimeout(() => {
-          this.$router.push({ name: "Login" });
-        }, 1000)
-      );
+    console.log(this.$route.query.token);
+
+    axios.post("http://localhost:8000/account/activate/", {
+      token: this.$route.query.token
+    });
+    // .then(
+    //   setTimeout(() => {
+    //     this.activated = true;
+    //   }, 4000)
+    // )
+    // .then(
+    //   setTimeout(() => {
+    //     this.$router.push({ name: "Login" });
+    //   }, 1000)
+    // );
   }
 };
 </script>

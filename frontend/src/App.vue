@@ -14,7 +14,7 @@
         </template>
 
         <template v-else>
-          <v-btn text class="mx-2" to="/">Timeline</v-btn>
+          <v-btn text class="mx-2" to="/timeline">Timeline</v-btn>
           <v-btn text class="mx-2" to="/profile">Profile</v-btn>
           <v-btn text class="mx-2" to="/about">About</v-btn>
           <v-spacer></v-spacer>
