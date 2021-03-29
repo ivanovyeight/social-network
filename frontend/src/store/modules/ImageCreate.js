@@ -1,7 +1,7 @@
 import axios from "axios";
 import Vue from "vue";
 import router from "../../router/index";
-import authentication from "./authentication.js"
+import authentication from "./authentication.js";
 
 const state = {
   data: {

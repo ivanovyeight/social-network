@@ -64,13 +64,15 @@ export default {
   methods: {
     onSubmit() {
       this.$refs.form.validate().then(success => {
-        if (!success) {
+        if (success) {
+          this.login({ username: this.username, password: this.password }).then(
+            setTimeout(() => {
+              this.$router.push({ name: "Timeline" });
+            }, 1000)
+          );
+        } else {
           return;
         }
-
-        this.login({ username: this.username, password: this.password }).then(
-          this.$router.push("/")
-        );
       });
     },
     ...mapActions(["login"])
