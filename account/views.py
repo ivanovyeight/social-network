@@ -10,9 +10,11 @@ from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.http import require_POST
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from datetime import date, timedelta
 
 from account.models import Contact
 
@@ -20,6 +22,14 @@ from .models import Profile
 from .serializers import UserSerializer
 from .tasks import activation_email
 
+
+class SubscriptionIsActive(BasePermission):
+    def has_permission(self, request, view):
+        now = date.today()
+        paid_until = request.user.profile.paid_until
+        subscription_expired = paid_until + timedelta(days=30)
+        if now < subscription_expired:
+            return True
 
 @api_view(["POST"])
 def activate(request):
@@ -66,9 +76,10 @@ def login(request):
 
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, SubscriptionIsActive])
 def timeline(request):
-    user = User.objects.get(username=request.data['username'])
+    user = request.user
+    # user = User.objects.get(username=request.data['username'])
     actions = Action.objects.exclude(user=user)
     following_ids = user.following.values_list('id', flat=True)
 
