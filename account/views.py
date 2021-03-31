@@ -1,20 +1,21 @@
+
 from actions.models import Action
 from actions.utils import create_action
 from common.decorators import ajax_required
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.http import require_POST
+from payments.permissions import SubscriptionIsActive
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-
-from datetime import date, timedelta
 
 from account.models import Contact
 
@@ -23,18 +24,17 @@ from .serializers import UserSerializer
 from .tasks import activation_email
 
 
-class SubscriptionIsActive(BasePermission):
-    def has_permission(self, request, view):
-        now = date.today()
-        paid_until = request.user.profile.paid_until
-        subscription_expired = paid_until + timedelta(days=30)
-        if now < subscription_expired:
-            return True
-
 @api_view(["POST"])
 def activate(request):
     # try:
     username = urlsafe_base64_decode(request.data["token"]).decode("utf-8")
+
+    try:
+        pass
+    except ObjectDoesNotExist:
+        pass
+
+
     user = User.objects.get(username=username)
     user.is_active = True
     user.save()
@@ -69,6 +69,7 @@ def login(request):
             'last_name': user.last_name or None,
             'date_of_birth': user.profile.date_of_birth or None,
             'photo': user.profile.photo or None,
+            'paid_until' : user.profile.paid_until or None
         }
         return Response(data, status=status.HTTP_200_OK)
     else:

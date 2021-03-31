@@ -1,13 +1,33 @@
 <template>
   <v-container>
     <v-card>
-      <v-container class="offset-md-4">
-        <v-avatar color="grey" size="256" round>
-          <v-img
-            src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
-            alt="..."
-          ></v-img>
-        </v-avatar>
+      <v-container>
+        <v-row>
+          <v-col cols="12" md="4">
+            <v-avatar color="grey" size="256" round>
+              <v-img
+                src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+                alt="..."
+              ></v-img>
+            </v-avatar>
+          </v-col>
+
+          <v-col cols="12" md="8">
+            <template v-if="iam.paid_until">
+              <v-alert text dense color="green">
+                Premium Subscription Until {{ iam.paid_until }}
+              </v-alert>
+            </template>
+
+            <template v-else>
+              <v-alert text dense color="gray">
+                Free Account
+              </v-alert>
+            </template>
+
+          </v-col>
+        </v-row>
+
       </v-container>
       <form>
         <div class="container">
