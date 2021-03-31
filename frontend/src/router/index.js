@@ -39,8 +39,8 @@ const PUBLIC_URLS = ["/", "/login", "/register", "/activate"];
 
 function accessGranted(path) {
   return (
-    (store.state.authentication.whoami.access_token &&
-      store.state.authentication.whoami.refresh_token) ||
+    (store.state.auth.iam.access_token &&
+      store.state.auth.iam.refresh_token) ||
     PUBLIC_URLS.includes(path)
   );
 }

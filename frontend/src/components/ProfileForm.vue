@@ -68,42 +68,42 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["whoamiUpdate"])
+    ...mapActions(["iamUpdate"])
   },
   computed: {
     ...mapState({
-      whoami: state => state.authentication.whoami
+      iam: state => state.auth.iam
     }),
     first_name: {
       get() {
-        return this.whoami.first_name;
+        return this.iam.first_name;
       },
       set(value) {
-        this.whoamiUpdate({ key: "first_name", value });
+        this.iamUpdate({ key: "first_name", value });
       }
     },
     last_name: {
       get() {
-        return this.whoami.last_name;
+        return this.iam.last_name;
       },
       set(value) {
-        this.whoamiUpdate({ key: "last_name", value });
+        this.iamUpdate({ key: "last_name", value });
       }
     },
     email: {
       get() {
-        return this.whoami.email;
+        return this.iam.email;
       },
       set(value) {
-        this.whoamiUpdate({ key: "email", value });
+        this.iamUpdate({ key: "email", value });
       }
     },
     date_of_birth: {
       get() {
-        return this.whoami.date_of_birth;
+        return this.iam.date_of_birth;
       },
       set(value) {
-        this.whoamiUpdate({ key: "date_of_birth", value });
+        this.iamUpdate({ key: "date_of_birth", value });
       }
     }
   }
