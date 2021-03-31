@@ -24,10 +24,8 @@
                 Free Account
               </v-alert>
             </template>
-
           </v-col>
         </v-row>
-
       </v-container>
       <form>
         <div class="container">
