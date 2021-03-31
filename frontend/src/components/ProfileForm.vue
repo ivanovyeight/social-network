@@ -1,14 +1,14 @@
 <template>
   <v-container>
     <v-card>
-      <div class="col-md-4">
+      <v-container class="offset-md-4">
         <v-avatar color="grey" size="256" round>
           <v-img
             src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
             alt="..."
           ></v-img>
         </v-avatar>
-      </div>
+      </v-container>
       <form>
         <div class="container">
           <v-row>

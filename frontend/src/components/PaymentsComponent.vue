@@ -9,7 +9,7 @@
         </v-btn>
       </v-container>
 
-      <v-container  v-if="paymentMethods.length > 0">
+      <v-container v-if="paymentMethods.length > 0">
         <v-row>
           <v-col
             cols="12"
