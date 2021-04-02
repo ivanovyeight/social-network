@@ -30,6 +30,7 @@ User.add_to_class('following', models.ManyToManyField('self', through=Contact,
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     stripe_id = models.CharField(max_length=100, blank=True, null=True)
+    paid_until = models.DateField(blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
     photo = models.ImageField(upload_to='users/%Y/%m/%d/', blank=True)
 

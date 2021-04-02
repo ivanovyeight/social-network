@@ -1,7 +1,7 @@
 import axios from "axios";
 import Vue from "vue";
 import router from "../../router/index";
-import authentication from "./authentication.js";
+import auth from "./auth.js";
 
 const state = {
   data: {
@@ -15,11 +15,10 @@ const actions = {
   saveImageToState({ commit }, object) {
     commit("setImageState", object);
   },
-
   async sendImageObject({ commit, state }) {
     let response = await axios.post("/images/api/create/", state.data, {
       headers: {
-        Authorization: `Bearer ${authentication.state.whoami.access_token}`,
+        Authorization: `Bearer ${auth.state.iam.access_token}`,
         "Content-Type": "application/json"
       }
     });

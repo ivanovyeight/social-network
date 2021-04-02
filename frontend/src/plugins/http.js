@@ -7,19 +7,19 @@ const http = axios.create({
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
-    Authorization: `Bearer ${store.state.authentication.whoami.access_token}`
+    Authorization: `Bearer ${store.state.auth.iam.access_token}`
   }
 });
 
 const refreshAuthLogic = failedRequest =>
   http
     .post("http://localhost:8000/account/api/token/refresh/", {
-      refresh: store.state.authentication.whoami.refresh_token
+      refresh: store.state.auth.iam.refresh_token
     })
     .then(tokenRefreshResponse => {
       let key = "access_token";
       let value = tokenRefreshResponse.data["access"];
-      store.commit("WHOAMI_UPDATE", { key, value });
+      store.commit("IAM_UPDATE", { key, value });
       failedRequest.response.config.headers[
         "Authorization"
       ] = `Bearer ${tokenRefreshResponse.data["access"]}`;

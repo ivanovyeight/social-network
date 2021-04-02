@@ -9,4 +9,5 @@ urlpatterns = [
     path('subscriptions/', views.subscription_plans),
     path('subscriptions/create/', views.create_subscription),
 
+    path('stripe-webhook/', views.stripe_webhook)
 ]

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const state = {
-  whoami: ""
+  iam: ""
 };
 
 const actions = {
@@ -12,34 +12,34 @@ const actions = {
       commit("LOGIN", response.data);
     });
   },
-  async whoamiUpdate({ commit, state }, { key, value }) {
+  async iamUpdate({ commit, state }, { key, value }) {
     let payload = {
-      id: state.whoami.id,
+      id: state.iam.id,
       key: key,
       value: value
     };
 
     let headers = {
-      Authorization: `Bearer ${state.whoami.access_token}`
+      Authorization: `Bearer ${state.iam.access_token}`
     };
 
     await axios.post("http://localhost:8000/account/update/", payload, {
       headers
     });
 
-    commit("WHOAMI_UPDATE", { key, value });
+    commit("IAM_UPDATE", { key, value });
   }
 };
 
 const mutations = {
   LOGIN(state, payload) {
-    state.whoami = payload;
+    state.iam = payload;
   },
   LOGOUT(state) {
-    state.whoami = "";
+    state.iam = "";
   },
-  WHOAMI_UPDATE(state, { key, value }) {
-    state.whoami[key] = value;
+  IAM_UPDATE(state, { key, value }) {
+    state.iam[key] = value;
   }
 };
 

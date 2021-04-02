@@ -4,33 +4,34 @@ from common.decorators import ajax_required
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.http import require_POST
+from payments.permissions import SubscriptionIsActive
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from account.models import Contact
-
-from .models import Profile
-from .serializers import UserSerializer
-from .tasks import activation_email
+from account.models import Contact, Profile
+from account.serializers import UserSerializer
+from account.tasks import activation_email
 
 
 @api_view(["POST"])
 def activate(request):
-    # try:
-    username = urlsafe_base64_decode(request.data["token"]).decode("utf-8")
-    user = User.objects.get(username=username)
-    user.is_active = True
-    user.save()
-    return Response(status=status.HTTP_200_OK)
-    # except:
-    #     return Response(status=status.HTTP_404_NOT_FOUND)
+    try:
+        username = urlsafe_base64_decode(request.data["token"]).decode("utf-8")
+        user = User.objects.get(username=username)
+        user.is_active = True
+        user.save()
+        return Response(status=status.HTTP_200_OK)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(["POST"])
 def register(request):
@@ -39,15 +40,15 @@ def register(request):
         serializer.save()
         activation_email.delay(request.data["username"], request.data["email"])
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    # else:
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["POST"])
 def login(request):
-    username = request.data['username']
-    password = request.data['password']
-    user = authenticate(request, username=username, password=password)
-    if user is not None:
+    try:
+        username = request.data['username']
+        password = request.data['password']
+        user = authenticate(request, username=username, password=password)
         refresh = RefreshToken.for_user(user)
         data = {
             'refresh_token': str(refresh),
@@ -59,16 +60,18 @@ def login(request):
             'last_name': user.last_name or None,
             'date_of_birth': user.profile.date_of_birth or None,
             'photo': user.profile.photo or None,
+            'paid_until' : user.profile.paid_until or None
         }
         return Response(data, status=status.HTTP_200_OK)
-    else:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, SubscriptionIsActive])
 def timeline(request):
-    user = User.objects.get(username=request.data['username'])
+    user = request.user
+    # user = User.objects.get(username=request.data['username'])
     actions = Action.objects.exclude(user=user)
     following_ids = user.following.values_list('id', flat=True)
 
@@ -100,32 +103,8 @@ def update(request):
 
     return Response(status=status.HTTP_200_OK)
 
-    # user_form = UserEditForm(instance=request.user,data=request.POST)
-    # profile_form = ProfileEditForm(instance=request.user.profile,
-    #                             data=request.POST, files=request.FILES)
-    
-    # if user_form.is_valid() and profile_form.is_valid():
-    #     user_form.save()
-    #     profile_form.save()
 
 ## REPLACE
-# @login_required
-# def dashboard(request):
-#     actions = Action.objects.exclude(user=request.user)
-#     following_ids = request.user.following.values_list('id', flat=True)
-
-#     if following_ids:
-#         actions = actions.filter(user_id__in=following_ids)
-#         # второй аргумент должен быть user__profile
-#     actions = actions.select_related('user', 'user').prefetch_related(
-#         'target')[:10]
-
-#     # Create profile for users created not with register form
-#     Profile.objects.get_or_create(user=request.user)
-
-#     return render(request, 'account/dashboard.html',
-#                   {'section': 'dashboard', 'actions': actions})
-
 @login_required
 def user_list(request):
     """ Список всех активных пользователей. """
@@ -163,37 +142,3 @@ def user_follow(request):
         except User.DoesNotExist:
             return JsonResponse({'status': 'ok'})
     return JsonResponse({'status': 'ok'})
-
-# def register(request):
-#     if request.method == 'POST':
-#         form = UserRegistrationForm(request.POST)
-#         if form.is_valid():
-#             # Создаем нового пользователя, но пока не сохраняем в базу данных.
-#             new_user = form.save(commit=False)
-#             # Задаем пользователю зашифрованный пароль.
-#             new_user.set_password(form.cleaned_data['password'])
-#             # Сохраняем пользователя в базе данных.
-#             new_user.save()
-#             Profile.objects.create(user=new_user)
-#             create_action(new_user, 'has created an account')
-#             return render(request, 'account/register_done.html',
-#                           {'new_user': new_user})
-#     else:
-#         form = UserRegistrationForm()
-#     return render(request, 'account/register.html', {'form': form})
-
-# @login_required
-# def edit(request):
-#     if request.method == 'POST':
-#         user_form = UserEditForm(instance=request.user,data=request.POST)
-#         profile_form = ProfileEditForm(instance=request.user.profile,
-#                                     data=request.POST, files=request.FILES)
-        
-#         if user_form.is_valid() and profile_form.is_valid():
-#             user_form.save()
-#             profile_form.save()
-#     else:
-#         user_form = UserEditForm(instance=request.user)
-#         profile_form = ProfileEditForm(instance=request.user.profile)
-#     return render(request,'account/edit.html', {'user_form': user_form,
-#                                                 'profile_form': profile_form})

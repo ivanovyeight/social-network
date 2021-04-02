@@ -8,7 +8,7 @@
         <v-btn text disabled>SOCIAL NETWORK</v-btn>
         <v-spacer></v-spacer>
 
-        <template v-if="!whoami.access_token && !whoami.username">
+        <template v-if="!iam.access_token && !iam.username">
           <v-btn text class="mx-2" to="/register">Register</v-btn>
           <v-btn text class="mx-2" to="/login">Login</v-btn>
         </template>
@@ -45,7 +45,7 @@ export default {
   name: "App",
   computed: {
     ...mapState({
-      whoami: state => state.authentication.whoami
+      iam: state => state.auth.iam
     }),
     theme() {
       return this.$vuetify.theme.dark ? "dark" : "light";

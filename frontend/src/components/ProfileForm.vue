@@ -1,14 +1,32 @@
 <template>
   <v-container>
     <v-card>
-      <div class="col-md-4">
-        <v-avatar color="grey" size="256" round>
-          <v-img
-            src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
-            alt="..."
-          ></v-img>
-        </v-avatar>
-      </div>
+      <v-container>
+        <v-row>
+          <v-col cols="12" md="4">
+            <v-avatar color="grey" size="256" round>
+              <v-img
+                src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+                alt="..."
+              ></v-img>
+            </v-avatar>
+          </v-col>
+
+          <v-col cols="12" md="8">
+            <template v-if="iam.paid_until">
+              <v-alert text dense color="green">
+                Premium Subscription Until {{ iam.paid_until }}
+              </v-alert>
+            </template>
+
+            <template v-else>
+              <v-alert text dense color="gray">
+                Free Account
+              </v-alert>
+            </template>
+          </v-col>
+        </v-row>
+      </v-container>
       <form>
         <div class="container">
           <v-row>
@@ -57,53 +75,47 @@
 import { mapState, mapActions } from "vuex";
 
 export default {
-  components: {
-    // ValidationProvider,
-    // ValidationObserver
-  },
+  components: {},
   data() {
-    return {
-      // username: "",
-      // password: ""
-    };
+    return {};
   },
   methods: {
-    ...mapActions(["whoamiUpdate"])
+    ...mapActions(["iamUpdate"])
   },
   computed: {
     ...mapState({
-      whoami: state => state.authentication.whoami
+      iam: state => state.auth.iam
     }),
     first_name: {
       get() {
-        return this.whoami.first_name;
+        return this.iam.first_name;
       },
       set(value) {
-        this.whoamiUpdate({ key: "first_name", value });
+        this.iamUpdate({ key: "first_name", value });
       }
     },
     last_name: {
       get() {
-        return this.whoami.last_name;
+        return this.iam.last_name;
       },
       set(value) {
-        this.whoamiUpdate({ key: "last_name", value });
+        this.iamUpdate({ key: "last_name", value });
       }
     },
     email: {
       get() {
-        return this.whoami.email;
+        return this.iam.email;
       },
       set(value) {
-        this.whoamiUpdate({ key: "email", value });
+        this.iamUpdate({ key: "email", value });
       }
     },
     date_of_birth: {
       get() {
-        return this.whoami.date_of_birth;
+        return this.iam.date_of_birth;
       },
       set(value) {
-        this.whoamiUpdate({ key: "date_of_birth", value });
+        this.iamUpdate({ key: "date_of_birth", value });
       }
     }
   }

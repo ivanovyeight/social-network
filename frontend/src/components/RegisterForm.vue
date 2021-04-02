@@ -1,43 +1,33 @@
 <template>
   <ValidationObserver ref="form">
     <v-form @submit.prevent="onSubmit">
-      <v-container>
-        <ValidationProvider
-          name="Email"
-          rules="email|required"
-          v-slot="{ errors }"
-        >
-          <v-text-field v-model="email" label="Email" required></v-text-field>
-          <span class="red--text">{{ errors[0] }}</span>
-        </ValidationProvider>
+      <ValidationProvider
+        name="Email"
+        rules="email|required"
+        v-slot="{ errors }"
+      >
+        <v-text-field v-model="email" label="Email" required></v-text-field>
+        <span class="red--text">{{ errors[0] }}</span>
+      </ValidationProvider>
 
-        <ValidationProvider
-          name="Username"
-          rules="required"
-          v-slot="{ errors }"
-        >
-          <v-text-field
-            v-model="username"
-            label="Username"
-            required
-          ></v-text-field>
-          <span class="red--text">{{ errors[0] }}</span>
-        </ValidationProvider>
+      <ValidationProvider name="Username" rules="required" v-slot="{ errors }">
+        <v-text-field
+          v-model="username"
+          label="Username"
+          required
+        ></v-text-field>
+        <span class="red--text">{{ errors[0] }}</span>
+      </ValidationProvider>
 
-        <ValidationProvider
-          name="Password"
-          rules="required"
-          v-slot="{ errors }"
-        >
-          <v-text-field
-            v-model="password"
-            label="Password"
-            type="password"
-            required
-          ></v-text-field>
-          <span class="red--text">{{ errors[0] }}</span>
-        </ValidationProvider>
-      </v-container>
+      <ValidationProvider name="Password" rules="required" v-slot="{ errors }">
+        <v-text-field
+          v-model="password"
+          label="Password"
+          type="password"
+          required
+        ></v-text-field>
+        <span class="red--text">{{ errors[0] }}</span>
+      </ValidationProvider>
       <v-btn
         dark
         color="grey darken-2"
