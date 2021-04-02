@@ -75,15 +75,9 @@
 import { mapState, mapActions } from "vuex";
 
 export default {
-  components: {
-    // ValidationProvider,
-    // ValidationObserver
-  },
+  components: {},
   data() {
-    return {
-      // username: "",
-      // password: ""
-    };
+    return {};
   },
   methods: {
     ...mapActions(["iamUpdate"])
