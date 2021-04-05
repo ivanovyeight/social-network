@@ -1,6 +1,6 @@
 from celery import shared_task
 from django.core.mail import send_mail
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_encode
 
 
 @shared_task

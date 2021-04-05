@@ -2,8 +2,8 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
+from account.forms import ProfileEditForm, UserRegistrationForm
 from account.models import Profile
-from account.forms import UserRegistrationForm, ProfileEditForm
 
 
 class AccountTest(TestCase):
