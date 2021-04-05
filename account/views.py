@@ -71,7 +71,6 @@ def login(request):
 @permission_classes([IsAuthenticated, SubscriptionIsActive])
 def timeline(request):
     user = request.user
-    # user = User.objects.get(username=request.data['username'])
     actions = Action.objects.exclude(user=user)
     following_ids = user.following.values_list('id', flat=True)
 
