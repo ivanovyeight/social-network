@@ -127,3 +127,15 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# PyCharm
+.idea/
+
+# Media
+media/
+
+node_modules
+
+env.sh
+
+.vscode
