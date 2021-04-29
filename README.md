@@ -1,0 +1,5 @@
+- Django, Django Rest Framework
+- VueJS, Vuex, Vue-Router
+- JWT Authentication
+- Stripe Subscription
+- Celery
